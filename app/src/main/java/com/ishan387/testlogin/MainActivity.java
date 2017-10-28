@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity implements
 
 
         // Views
-        mStatusTextView = (TextView) findViewById(R.id.status);
+      /*  mStatusTextView = (TextView) findViewById(R.id.status);
         mDetailTextView = (TextView) findViewById(R.id.detail);
-        mEmailField = (EditText) findViewById(R.id.field_email);
+*/        mEmailField = (EditText) findViewById(R.id.field_email);
         mPasswordField = (EditText) findViewById(R.id.field_password);
         bar = (ProgressBar) this.findViewById(R.id.progressBar);
         //new ProgressTask().execute();
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements
         // Buttons
         findViewById(R.id.email_sign_in_button).setOnClickListener(this);
         findViewById(R.id.email_create_account_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.verify_email_button).setOnClickListener(this);
+       /* findViewById(R.id.sign_out_button).setOnClickListener(this);
+        findViewById(R.id.verify_email_button).setOnClickListener(this);*/
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -84,22 +84,22 @@ public class MainActivity extends AppCompatActivity implements
     private void updateUI(FirebaseUser user) {
         //hideProgressDialog();
         if (user != null) {
-            mStatusTextView.setText(getString(R.string.emailpassword_status_fmt,
+           /* mStatusTextView.setText(getString(R.string.emailpassword_status_fmt,
                     user.getEmail(), user.isEmailVerified()));
             mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
+*/
+           // findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
             findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
+           // findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
 
-            findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
+           // findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
         } else {
-            mStatusTextView.setText(R.string.signed_out);
+           /* mStatusTextView.setText(R.string.signed_out);
             mDetailTextView.setText(null);
-
-            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
+*/
+            //findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-            findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
+            //findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
         }
     }
 
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements
 
                         // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
-                            mStatusTextView.setText(R.string.auth_failed);
+                         //   mStatusTextView.setText(R.string.auth_failed);
                         }
                         //hideProgressDialog();
                         // [END_EXCLUDE]
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void sendEmailVerification() {
         // Disable button
-        findViewById(R.id.verify_email_button).setEnabled(false);
+        //findViewById(R.id.verify_email_button).setEnabled(false);
 
         // Send verification email
         // [START send_email_verification]
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<Void> task) {
                         // [START_EXCLUDE]
                         // Re-enable button
-                        findViewById(R.id.verify_email_button).setEnabled(true);
+                      //  findViewById(R.id.verify_email_button).setEnabled(true);
 
                         if (task.isSuccessful()) {
                             Toast.makeText(MainActivity.this,
@@ -238,11 +238,11 @@ public class MainActivity extends AppCompatActivity implements
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         } else if (i == R.id.email_sign_in_button) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i == R.id.sign_out_button) {
+        } /*else if (i == R.id.sign_out_button) {
             signOut();
         } else if (i == R.id.verify_email_button) {
             sendEmailVerification();
-        }
+        }*/
     }
 
     @Override
