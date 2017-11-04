@@ -94,7 +94,18 @@ public class LoginActivity extends AppCompatActivity implements
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        if(null != currentUser)
+        {
+
+            Intent i = new Intent(getApplicationContext(),Home.class);
+            i.putExtra("username", currentUser.getDisplayName());
+            i.putExtra("userphotourl", currentUser.getPhotoUrl().toString());
+            Log.d("photo url", currentUser.getPhotoUrl().toString());
+            i.putExtra("useremail",currentUser.getEmail().toString());
+            startActivity(i);
+        }
+
+
     }
 
     private void updateUI(FirebaseUser user) {
@@ -170,7 +181,13 @@ public class LoginActivity extends AppCompatActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            adduserToUserTable(user);
+                            Intent i = new Intent(getApplicationContext(),Home.class);
+                            i.putExtra("username", user.getDisplayName());
+                            i.putExtra("userphotourl", user.getPhotoUrl().toString());
+                            Log.d("photo url", user.getPhotoUrl().toString());
+                            i.putExtra("useremail",user.getEmail().toString());
+                            startActivity(i);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -292,7 +309,8 @@ public class LoginActivity extends AppCompatActivity implements
                             adduserToUserTable(user);
                             Intent i = new Intent(getApplicationContext(),Home.class);
                             i.putExtra("username", user.getDisplayName());
-                            i.putExtra("userphotourl", user.getPhotoUrl());
+                            i.putExtra("userphotourl", user.getPhotoUrl().toString());
+                            Log.d("photo url", user.getPhotoUrl().toString());
                             i.putExtra("useremail",user.getEmail());
                             startActivity(i);
                         //    updateUI(user);

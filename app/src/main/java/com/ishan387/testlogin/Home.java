@@ -1,8 +1,10 @@
 package com.ishan387.testlogin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,6 +27,7 @@ public class Home extends AppCompatActivity
     private DrawerLayout drawer;
     private View navHeader;
     private ImageView imgProfile;
+    private FirebaseAuth mAuth;
     String url;
    /* private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;*/
@@ -33,6 +37,18 @@ public class Home extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAuth = FirebaseAuth.getInstance();
+        // Navigation view header
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        navHeader = navigationView.getHeaderView(0);
+        // txtName = (TextView) navHeader.findViewById(R.id.name);
+        //txtWebsite = (TextView) navHeader.findViewById(R.id.website);
+        //imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
+        imgProfile = (ImageView) navHeader.findViewById(R.id.imageprofile);
+
+
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -66,15 +82,8 @@ public class Home extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        // Navigation view header
-        navHeader = navigationView.getHeaderView(0);
-       // txtName = (TextView) navHeader.findViewById(R.id.name);
-        //txtWebsite = (TextView) navHeader.findViewById(R.id.website);
-        //imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
-        imgProfile = (ImageView) navHeader.findViewById(R.id.imageprofile);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     private void loadNavHeader(String url) {
@@ -130,6 +139,10 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
+
+            mAuth.signOut();
+            Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_manage) {
 
