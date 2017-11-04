@@ -25,6 +25,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.ishan387.testlogin.model.UserDetails;
 
 public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener,  GoogleApiClient.OnConnectionFailedListener  {
@@ -39,6 +42,8 @@ public class LoginActivity extends AppCompatActivity implements
     private EditText mPasswordField;
     private ProgressBar bar;
 
+    DatabaseReference users;
+
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
@@ -46,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.loginactivity);
 
 
         // Views
@@ -77,6 +82,9 @@ public class LoginActivity extends AppCompatActivity implements
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
+
+
+        users = FirebaseDatabase.getInstance().getReference("Users");
         // [END initialize_auth]
 
     }
@@ -281,6 +289,12 @@ public class LoginActivity extends AppCompatActivity implements
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Authentication passed."+user.getDisplayName(),
                                     Toast.LENGTH_SHORT).show();
+                            adduserToUserTable(user);
+                            Intent i = new Intent(getApplicationContext(),Home.class);
+                            i.putExtra("username", user.getDisplayName());
+                            i.putExtra("userphotourl", user.getPhotoUrl());
+                            i.putExtra("useremail",user.getEmail());
+                            startActivity(i);
                         //    updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -296,6 +310,15 @@ public class LoginActivity extends AppCompatActivity implements
                     }
                 });
     }
+
+    private void adduserToUserTable(FirebaseUser user) {
+
+        String id = users.push().getKey();
+
+        UserDetails userDetails = new UserDetails(id,user.getEmail(),false,user.getUid());
+        users.child(id).setValue(userDetails);
+    }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
