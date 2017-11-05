@@ -12,7 +12,19 @@ public class Product {
     String name;
     String description;
     String category;
+    String imageUrl;
+
     float price;
+
+    public Product(int id, String name, String description, String category, String imageUrl, float price, List<Review> reviewList) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.reviewList = reviewList;
+    }
 
     List<Review> reviewList;
 
@@ -68,12 +80,5 @@ public class Product {
         return reviewList;
     }
 
-    public Product(int id, String name, String description, String category, float price, List<Review> reviewList) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.price = price;
-        this.reviewList = reviewList;
-    }
+
 }

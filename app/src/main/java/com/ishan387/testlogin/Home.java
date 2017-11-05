@@ -144,7 +144,9 @@ public class Home extends AppCompatActivity
             Intent i = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_admin) {
+            Intent i = new Intent(getApplicationContext(),AdminActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_share) {
 

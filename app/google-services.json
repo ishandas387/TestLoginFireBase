@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "675072247730-6k9rv68n7t9e20atv2j2adoti0urq4vg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ishan387.testlogin",
+            "certificate_hash": "9fb0ec0a17208e745ce399d4b3a773325985b852"
+          }
+        },
+        {
           "client_id": "675072247730-gpvc3hq9rs5dqqi34tv6d91731ascmde.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,57 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675072247730-gpvc3hq9rs5dqqi34tv6d91731ascmde.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675072247730:android:9bc59f2947ff1dd1",
+        "android_client_info": {
+          "package_name": "com.ishan387.firebasedbtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675072247730-fa6rt4an93hsmc3gntah0a6jjjvgf30o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ishan387.firebasedbtest",
+            "certificate_hash": "9fb0ec0a17208e745ce399d4b3a773325985b852"
+          }
+        },
+        {
+          "client_id": "675072247730-gpvc3hq9rs5dqqi34tv6d91731ascmde.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwHHY4K1a5YthOJXe22U2zh--M-u9-4k0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675072247730-gpvc3hq9rs5dqqi34tv6d91731ascmde.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

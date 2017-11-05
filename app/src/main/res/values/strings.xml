@@ -115,4 +115,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_admin_activuty">AdminActivuty</string>
+    <array name="type">
+
+        <item>category1</item>
+        <item>category2</item>
+        <item>category3</item>
+        <item>category4</item>
+
+    </array>
 </resources>
