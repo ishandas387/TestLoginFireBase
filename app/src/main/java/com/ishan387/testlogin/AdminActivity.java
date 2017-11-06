@@ -1,5 +1,8 @@
 package com.ishan387.testlogin;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,20 +13,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ishan387.testlogin.model.Product;
 
 public class AdminActivity extends AppCompatActivity {
 
+    private static final int PICK_IMAGE_REQUEST =111 ;
     private TextView mStatusTextView;
     private TextView mDetailTextView;
     private EditText itemName;
     Spinner category;
     private EditText itemDescription;
     private EditText itemPrice;
-    Button save;
+    Button save,upload;
+
+    Uri filePath;
+    StorageReference storage;
 
     DatabaseReference products;
 
@@ -48,7 +60,12 @@ public class AdminActivity extends AppCompatActivity {
         category = (Spinner) findViewById(R.id.categoryspin);
         itemPrice = (EditText) findViewById(R.id.price);
         save = (Button) findViewById(R.id.saveitem);
+        upload =(Button) findViewById(R.id.uploadimage);
         products = FirebaseDatabase.getInstance().getReference("Products");
+        storage = FirebaseStorage.getInstance().getReference();
+
+       // FirebaseStorage storage = FirebaseStorage.getInstance();
+        //StorageReference storageRef = storage.getReferenceFromUrl("testlogin-6db22.appspot.com");    //change the url according to your firebase app
 
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +78,38 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_PICK);
+                startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+            }
+        });
 
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==PICK_IMAGE_REQUEST && resultCode ==RESULT_OK)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
+            filePath = data.getData();
+            StorageReference filePathStorage = storage.child("photos").child(filePath.getLastPathSegment());
+            filePathStorage.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(getApplicationContext(),"done",Toast.LENGTH_LONG).show();
+                    progressDialog.hide();
+                }
+            });
+
+        }
     }
 
     private void addItemToDb() {

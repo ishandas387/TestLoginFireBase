@@ -349,7 +349,6 @@ public class LoginActivity extends AppCompatActivity implements
                 }else {
 
                     String id = users.push().getKey();
-
                     UserDetails userDetails = new UserDetails(id,user.getEmail(),false,user.getUid());
                     users.child(id).setValue(userDetails);
                 }
