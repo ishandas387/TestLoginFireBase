@@ -2,8 +2,11 @@ package com.ishan387.testlogin;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,6 +26,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ishan387.testlogin.model.Product;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -35,6 +42,7 @@ public class AdminActivity extends AppCompatActivity {
     Button save,upload;
 
     Uri filePath;
+    byte[] bytearray;
     StorageReference storage;
 
     DatabaseReference products;
@@ -98,33 +106,73 @@ public class AdminActivity extends AppCompatActivity {
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading");
-            progressDialog.show();
+            //progressDialog.show();
             filePath = data.getData();
-            StorageReference filePathStorage = storage.child("photos").child(filePath.getLastPathSegment());
+
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            bytearray = baos.toByteArray();
+           /* StorageReference filePathStorage = storage.child("photos").child(filePath.getLastPathSegment());
             filePathStorage.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(getApplicationContext(),"done",Toast.LENGTH_LONG).show();
                     progressDialog.hide();
                 }
-            });
+            });*/
 
         }
     }
 
     private void addItemToDb() {
 
-        Product product = new Product();
-        String id = products.push().getKey();
-        product.setCategory(category.getSelectedItem().toString());
-        product.setPrice(Float.parseFloat(itemPrice.getText().toString()));
-        product.setName(itemName.getText().toString());
-        product.setDescription(itemDescription.getText().toString());
+        final String id = products.push().getKey();
+         String[] downloadUrl = new String[3];
+        if(bytearray != null)
+        {
 
-        products.child(id).setValue(product);
+            final StorageReference filePathStorage = storage.child("photos").child(id);
+            UploadTask task = filePathStorage.putBytes(bytearray);
 
+            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
+                    String urlD =taskSnapshot.getDownloadUrl().toString();
+                    Product product = new Product();
 
+                    product.setCategory(category.getSelectedItem().toString());
+                    product.setPrice(Float.parseFloat(itemPrice.getText().toString()));
+                    product.setName(itemName.getText().toString());
+                    product.setDescription(itemDescription.getText().toString());
+                    product.setImageUrl(urlD);
+                    products.child(id).setValue(product);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+
+        }
+
+        else {
+            Product product = new Product();
+            product.setCategory(category.getSelectedItem().toString());
+            product.setPrice(Float.parseFloat(itemPrice.getText().toString()));
+            product.setName(itemName.getText().toString());
+            product.setDescription(itemDescription.getText().toString());
+            products.child(id).setValue(product);
+
+        }
     }
 
 }

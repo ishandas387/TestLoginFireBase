@@ -14,6 +14,15 @@ public class Product {
     String category;
     String imageUrl;
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+
+        return imageUrl;
+    }
+
     float price;
 
     public Product(int id, String name, String description, String category, String imageUrl, float price, List<Review> reviewList) {
