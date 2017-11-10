@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,6 +22,17 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.ishan387.testlogin.model.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,7 +42,12 @@ public class Home extends AppCompatActivity
     private View navHeader;
     private ImageView imgProfile;
     private FirebaseAuth mAuth;
+    private RecyclerView recyclerView;
+    private ProductAdapter mAdapter;
     String url;
+    StorageReference storage;
+
+    DatabaseReference products;
    /* private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;*/
     @Override
@@ -38,6 +57,8 @@ public class Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
+        products = FirebaseDatabase.getInstance().getReference("Products");
+        storage = FirebaseStorage.getInstance().getReference();
         // Navigation view header
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -82,6 +103,46 @@ public class Home extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        final List<Product> pList = new ArrayList<>();
+        products.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Iterable<DataSnapshot> x = dataSnapshot.getChildren();
+                for(DataSnapshot p :x)
+                {
+                    Product pd = p.getValue(Product.class);
+                    pList.add(pd);
+
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mAdapter = new ProductAdapter(pList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
 
     }
