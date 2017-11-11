@@ -18,9 +18,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ishan387.testlogin.model.Product;
+import com.ishan387.testlogin.model.ProductViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,13 +111,14 @@ public class Home extends AppCompatActivity
         products.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Iterable<DataSnapshot> x = dataSnapshot.getChildren();
+             /*   Iterable<Product> x = dataSnapshot.getValue();
                 for(DataSnapshot p :x)
                 {
-                    Product pd = p.getValue(Product.class);
-                    pList.add(pd);
+                    String s1 = p.getValue(String.class);
+                    Log.i("product",  s1);
+                  //  pList.add(pd);
 
-                }
+                }*/
             }
 
             @Override
@@ -142,9 +146,24 @@ public class Home extends AppCompatActivity
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+
+        loadRecylerView();
 
 
+    }
+
+    private void loadRecylerView() {
+        FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products) {
+            @Override
+            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
+                Toast.makeText(Home.this, "in populate",
+                        Toast.LENGTH_SHORT).show();
+                viewHolder.category.setText(model.getCategory());
+                viewHolder.price.setText(Float.toString(model.getPrice()));
+                viewHolder.title.setText(model.getName());
+            }
+        };
+        recyclerView.setAdapter(adapter);
     }
 
     private void loadNavHeader(String url) {
