@@ -349,7 +349,7 @@ public class LoginActivity extends AppCompatActivity implements
                 }else {
 
                     String id = users.push().getKey();
-                    UserDetails userDetails = new UserDetails(id,user.getEmail(),false,user.getUid());
+                    UserDetails userDetails = new UserDetails(id,user.getEmail(),false,user.getDisplayName(),user.getUid());
                     users.child(id).setValue(userDetails);
                 }
             }

@@ -1,6 +1,7 @@
 package com.ishan387.testlogin;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.ProductViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,8 @@ public class Home extends AppCompatActivity
     StorageReference storage;
 
     DatabaseReference products;
+
+    FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
    /* private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;*/
     @Override
@@ -153,14 +157,31 @@ public class Home extends AppCompatActivity
     }
 
     private void loadRecylerView() {
-        FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products) {
+        adapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products) {
             @Override
-            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
-                Toast.makeText(Home.this, "in populate",
-                        Toast.LENGTH_SHORT).show();
+            protected void populateViewHolder(final ProductViewHolder viewHolder, Product model, int position) {
+
                 viewHolder.category.setText(model.getCategory());
                 viewHolder.price.setText(Float.toString(model.getPrice()));
                 viewHolder.title.setText(model.getName());
+                if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
+                {
+                    Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
+                    Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
+                }
+
+               final Product m = model;
+                viewHolder.setItemClickListener(new onClickInterface() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Toast.makeText(Home.this, m.getName(),
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent i = new Intent(Home.this,ItemDetail.class);
+                        i.putExtra("productId",adapter.getRef(position).getKey());
+                        startActivity(i);
+                    }
+                });
             }
         };
         recyclerView.setAdapter(adapter);
@@ -214,9 +235,7 @@ public class Home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -232,6 +251,11 @@ public class Home extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        }
+        else if (id ==R.id.category)
+        {
+            Intent i = new Intent(getApplicationContext(),Category.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

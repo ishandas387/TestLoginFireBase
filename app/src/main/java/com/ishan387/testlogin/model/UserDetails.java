@@ -24,6 +24,34 @@ public class UserDetails {
     String userEmail;
     boolean isAdmin;
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public UserDetails(String key, String userEmail, boolean isAdmin, String userName, String uId) {
+        this.key = key;
+        this.userEmail = userEmail;
+        this.isAdmin = isAdmin;
+        this.userName = userName;
+        this.uId = uId;
+    }
+
+    public String getUserName() {
+
+        return userName;
+    }
+
+    String userName;
+
+    public UserDetails(String key, String userEmail, boolean isAdmin, String userName, String uId, List<Orders> pastOrderList) {
+        this.key = key;
+        this.userEmail = userEmail;
+        this.isAdmin = isAdmin;
+        this.userName = userName;
+        this.uId = uId;
+        this.pastOrderList = pastOrderList;
+    }
+
     String uId;
 
     public UserDetails(String key, String userEmail, boolean isAdmin, String uId) {

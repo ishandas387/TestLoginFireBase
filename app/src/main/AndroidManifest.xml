@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -29,13 +29,22 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
+            android:name=".ItemDetail"
+            android:label="Item Detail" />
+        <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AdminActivity"
             android:label="@string/title_activity_admin_activuty"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Category"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_category"
+            android:theme="@style/FullscreenTheme" />
+
     </application>
 
 </manifest>
