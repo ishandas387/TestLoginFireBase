@@ -11,6 +11,11 @@ class Orders {
     Date date;
     String orderId;
     String productId;
+    String userName;
+    String uid;
+    String price;
+    String productName;
+    String serviceTime;
 
     public Orders() {
     }
