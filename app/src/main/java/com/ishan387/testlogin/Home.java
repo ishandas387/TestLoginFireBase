@@ -19,10 +19,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -52,8 +55,10 @@ public class Home extends AppCompatActivity
     String url;
     StorageReference storage;
 
+
     DatabaseReference products;
 
+    SimpleDraweeView draweeView ;
     FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
    /* private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;*/
@@ -63,6 +68,7 @@ public class Home extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         mAuth = FirebaseAuth.getInstance();
         products = FirebaseDatabase.getInstance().getReference("Products");
         storage = FirebaseStorage.getInstance().getReference();
@@ -75,6 +81,8 @@ public class Home extends AppCompatActivity
         //txtWebsite = (TextView) navHeader.findViewById(R.id.website);
         //imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
         imgProfile = (ImageView) navHeader.findViewById(R.id.imageprofile);
+       // SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.imphoto);
+
 
 
 
@@ -166,8 +174,13 @@ public class Home extends AppCompatActivity
                 viewHolder.title.setText(model.getName());
                 if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
                 {
-                    Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
-                    Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
+                   // Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
+                   // Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
+                    Uri uri = Uri.parse(model.getImageUrl());
+                    if(null!= uri) {
+                        Glide.with(getBaseContext()).load(uri).into(viewHolder.bgi);
+                       // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
+                    }
                 }
 
                final Product m = model;

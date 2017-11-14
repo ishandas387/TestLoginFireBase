@@ -1,19 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+
+    android:layout_marginBottom="1dp"
+    android:layout_marginTop="1dp"
     android:clickable="true"
-    android:background="?android:attr/selectableItemBackground"
+
     android:orientation="vertical">
 
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="200dp" android:elevation="15dp" android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:id="@+id/layoutphoto">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:scaleType="fitXY" android:src="@drawable/ic_action_signout" android:id="@+id/imphoto" android:fitsSystemWindows="true"/>
+
+       <!-- <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/imphoto"
+            android:layout_width="130dp"
+            android:layout_height="200dp"
+            fresco:placeholderImage="@drawable/ic_action_signout" />-->
+     <!--   <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:orientation="vertical" android:id="@+id/l2" >-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp" android:orientation="vertical" android:gravity="bottom" android:layout_alignParentBottom="true" android:background="#80000000" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:alpha="60" android:orientation="horizontal" android:weightSum="10">
 
 
-    <LinearLayout
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textAlignment="textStart"
+                    android:layout_weight="8"
+                    android:id="@+id/title"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="5dp"
+                    android:padding="5dp"
+                    android:text="TEST"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/price"
+                    android:layout_weight="2"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" android:padding="5dp" android:textAlignment="textEnd" android:text="price"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"  android:id="@+id/category"
+                    android:textStyle="bold" android:textColor="@android:color/white" android:text="category"/>
+            </LinearLayout>
+
+            </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+
+</android.support.v7.widget.CardView>
+
+  <!--  <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -46,7 +116,7 @@
             android:layout_height="wrap_content" />
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 </RelativeLayout>

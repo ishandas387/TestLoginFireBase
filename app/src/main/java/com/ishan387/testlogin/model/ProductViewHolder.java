@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ishan387.testlogin.R;
@@ -15,6 +16,7 @@ import com.ishan387.testlogin.onClickInterface;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
     public TextView title, price, category;
+    public RelativeLayout r2 ;
     public ImageView bgi;
 
     public void setItemClickListener(onClickInterface itemClickListener) {
@@ -27,7 +29,8 @@ public class ProductViewHolder extends RecyclerView.ViewHolder  implements View.
         title = (TextView) view.findViewById(R.id.title);
         category = (TextView) view.findViewById(R.id.category);
         price = (TextView) view.findViewById(R.id.price);
-        bgi =(ImageView) view.findViewById(R.id.backgroundimage);
+        r2 = (RelativeLayout) view.findViewById(R.id.layoutphoto) ;
+        bgi =(ImageView) view.findViewById(R.id.imphoto);
         view.setOnClickListener(this);
 
     }
