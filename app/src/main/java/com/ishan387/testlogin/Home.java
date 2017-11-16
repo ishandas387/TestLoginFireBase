@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -49,6 +50,7 @@ public class Home extends AppCompatActivity
     private DrawerLayout drawer;
     private View navHeader;
     private ImageView imgProfile;
+    TextView username,useremail;
     private FirebaseAuth mAuth;
     private RecyclerView recyclerView;
     private ProductAdapter mAdapter;
@@ -83,7 +85,8 @@ public class Home extends AppCompatActivity
         imgProfile = (ImageView) navHeader.findViewById(R.id.imageprofile);
        // SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.imphoto);
 
-
+        username =(TextView) navHeader.findViewById(R.id.name);
+        useremail = (TextView) navHeader.findViewById(R.id.useremail);
 
 
         if (savedInstanceState == null) {
@@ -101,7 +104,7 @@ public class Home extends AppCompatActivity
 
         }
        // String url = getIntent().getStringExtra("userphotourl");
-        loadNavHeader(url);
+        loadNavHeader(url,mAuth);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +203,7 @@ public class Home extends AppCompatActivity
         recyclerView.setAdapter(adapter);
     }
 
-    private void loadNavHeader(String url) {
+    private void loadNavHeader(String url, FirebaseAuth mAuth) {
         // Loading profile image
         Glide.with(this).load(url)
                 .crossFade()
@@ -208,6 +211,8 @@ public class Home extends AppCompatActivity
                 .bitmapTransform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imgProfile);
+       username.setText( mAuth.getCurrentUser().getDisplayName());
+       useremail.setText(mAuth.getCurrentUser().getEmail());
     }
 
     @Override

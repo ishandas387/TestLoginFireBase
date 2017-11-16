@@ -4,17 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ishan387.testlogin.Cart">
+    tools:context="com.ishan387.testlogin.Cart" android:background="#e6f2ff">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cartlist"
-        android:background="@android:color/transparent"></android.support.v7.widget.RecyclerView>
+        android:background="@android:color/transparent">
+
+    </android.support.v7.widget.RecyclerView>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:elevation="20dp"
         android:layout_alignParentBottom="true"
         app:cardBackgroundColor="@color/colorPrimary"
         android:id="@+id/cardview">
