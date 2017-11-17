@@ -7,11 +7,22 @@
 
     android:background="@android:color/holo_blue_light"
     tools:context="com.ishan387.testlogin.Home"
-    tools:showIn="@layout/app_bar_home">
+    tools:showIn="@layout/app_bar_home"
+   >
 
+        <com.mancj.materialsearchbar.MaterialSearchBar
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchbar"
+            android:layout_alignParentTop="true"
+            app:mt_speechMode="false"
+            app:mt_hint="search for a service">
+
+        </com.mancj.materialsearchbar.MaterialSearchBar>
 
         <android.support.v7.widget.RecyclerView
+            android:layout_below="@+id/searchbar"
             android:id="@+id/recycler_view"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"

@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -38,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.ProductViewHolder;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -62,6 +65,12 @@ public class Home extends AppCompatActivity
 
     SimpleDraweeView draweeView ;
     FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
+
+    //searchbar
+    FirebaseRecyclerAdapter<Product, ProductViewHolder> searchAdapter;
+    List<String> suggestionList = new ArrayList<>();
+    MaterialSearchBar materialSearchBar;
+
    /* private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;*/
     @Override
@@ -87,7 +96,8 @@ public class Home extends AppCompatActivity
 
         username =(TextView) navHeader.findViewById(R.id.name);
         useremail = (TextView) navHeader.findViewById(R.id.useremail);
-
+        materialSearchBar =(MaterialSearchBar) findViewById(R.id.searchbar);
+        materialSearchBar.setSpeechMode(false);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -163,9 +173,95 @@ public class Home extends AppCompatActivity
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         loadRecylerView();
+        materialSearchBar.setLastSuggestions(suggestionList);
+        materialSearchBar.addTextChangeListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                List<String> suggest = new ArrayList<>();
+                for(String search :suggestionList)
+                {
+                    if(search.toLowerCase().contains(materialSearchBar.getText().toLowerCase()))
+                    {
+                        suggest.add(search);
+                    }
+                }
+                materialSearchBar.setLastSuggestions(suggest);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
+            @Override
+            public void onSearchStateChanged(boolean enabled) {
+
+                if(!enabled)
+                {
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onSearchConfirmed(CharSequence text) {
+                    startSearch(text);
+            }
+
+            @Override
+            public void onButtonClicked(int buttonCode) {
+
+            }
+        });
 
     }
+
+    private void startSearch(CharSequence text) {
+        searchAdapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products.orderByChild("name").equalTo(text.toString())) {
+            @Override
+            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
+
+                viewHolder.category.setText(model.getCategory());
+                viewHolder.price.setText(Float.toString(model.getPrice()));
+                viewHolder.title.setText(model.getName());
+                suggestionList.add(model.getName());
+                if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
+                {
+                    // Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
+                    // Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
+                    Uri uri = Uri.parse(model.getImageUrl());
+                    if(null!= uri) {
+                        Glide.with(getBaseContext()).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.bgi);
+                        // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
+                    }
+                }
+
+                final Product m = model;
+                viewHolder.setItemClickListener(new onClickInterface() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Toast.makeText(Home.this, m.getName(),
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent i = new Intent(Home.this,ItemDetail.class);
+                        i.putExtra("productId",searchAdapter.getRef(position).getKey());
+                        startActivity(i);
+                    }
+                });
+            }
+
+
+        };
+        recyclerView.setAdapter(searchAdapter);
+    }
+
 
     private void loadRecylerView() {
         adapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products) {
@@ -175,13 +271,14 @@ public class Home extends AppCompatActivity
                 viewHolder.category.setText(model.getCategory());
                 viewHolder.price.setText(Float.toString(model.getPrice()));
                 viewHolder.title.setText(model.getName());
+                suggestionList.add(model.getName());
                 if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
                 {
                    // Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
                    // Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
                     Uri uri = Uri.parse(model.getImageUrl());
                     if(null!= uri) {
-                        Glide.with(getBaseContext()).load(uri).into(viewHolder.bgi);
+                        Glide.with(getBaseContext()).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.bgi);
                        // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
                     }
                 }
@@ -274,7 +371,7 @@ public class Home extends AppCompatActivity
         {
             Intent i = new Intent(getApplicationContext(),Category.class);
             startActivity(i);
-        }
+        } 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
