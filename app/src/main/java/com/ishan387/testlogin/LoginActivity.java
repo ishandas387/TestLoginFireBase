@@ -157,13 +157,20 @@ public class LoginActivity extends AppCompatActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            Toast.makeText(LoginActivity.this, "Verification email sent to your mail id",
+                                    Toast.LENGTH_LONG  ).show();
+                            sendEmailVerification();
+                            Intent i = getIntent();
+                            finish();
+                            startActivity(i);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            Intent i = getIntent();
+                            finish();
+                            startActivity(i);
                         }
 
                         // [START_EXCLUDE]
@@ -180,40 +187,54 @@ public class LoginActivity extends AppCompatActivity implements
             return;
         }
 
+
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "signInWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    if(mAuth.getCurrentUser().isEmailVerified())
+                                    {
+                                        adduserToUserTable(user);
+                                        Intent i = new Intent(getApplicationContext(),Home.class);
+                                        i.putExtra("username", user.getDisplayName());
+
+                                        i.putExtra("useremail",user.getEmail().toString());
+                                        startActivity(i);
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(LoginActivity.this, "Please verify your email",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                    updateUI(null);
+                                }
+
+                                // [START_EXCLUDE]
+                                if (!task.isSuccessful()) {
+                                    //   mStatusTextView.setText(R.string.auth_failed);
+                                }
+                                //hideProgressDialog();
+                                // [END_EXCLUDE]
+                            }
+                        });
+
+
+
+
        // showProgressDialog();
 
         // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            adduserToUserTable(user);
-                            Intent i = new Intent(getApplicationContext(),Home.class);
-                            i.putExtra("username", user.getDisplayName());
-                            i.putExtra("userphotourl", user.getPhotoUrl().toString());
-                            Log.d("photo url", user.getPhotoUrl().toString());
-                            i.putExtra("useremail",user.getEmail().toString());
-                            startActivity(i);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
 
-                        // [START_EXCLUDE]
-                        if (!task.isSuccessful()) {
-                         //   mStatusTextView.setText(R.string.auth_failed);
-                        }
-                        //hideProgressDialog();
-                        // [END_EXCLUDE]
-                    }
-                });
         // [END sign_in_with_email]
     }
 
@@ -257,7 +278,7 @@ public class LoginActivity extends AppCompatActivity implements
 
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            mEmailField.setError("Required..");
             valid = false;
         } else {
             mEmailField.setError(null);
@@ -265,7 +286,7 @@ public class LoginActivity extends AppCompatActivity implements
 
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
+            mPasswordField.setError("Required..");
             valid = false;
         } else {
             mPasswordField.setError(null);

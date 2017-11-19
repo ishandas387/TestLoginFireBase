@@ -46,7 +46,8 @@
             android:label="@string/title_activity_category"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".Cart" />
-        <activity android:name=".ViewOrders"></activity>
+        <activity android:name=".ViewOrders" />
+        <activity android:name=".OrderStatus"></activity>
     </application>
 
 </manifest>

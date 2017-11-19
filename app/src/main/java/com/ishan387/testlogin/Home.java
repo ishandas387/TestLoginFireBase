@@ -371,7 +371,7 @@ public class Home extends AppCompatActivity
         {
             Intent i = new Intent(getApplicationContext(),Category.class);
             startActivity(i);
-        } 
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

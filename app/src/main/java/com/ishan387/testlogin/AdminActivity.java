@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ishan387.testlogin.model.Product;
@@ -80,9 +81,8 @@ public class AdminActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addItemToDb();
-                Snackbar.make(view, "Product Added", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                addItemToDb(view);
+
 
             }
         });
@@ -120,6 +120,7 @@ public class AdminActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             bytearray = baos.toByteArray();
+            upload.setText("Image selected");
            /* StorageReference filePathStorage = storage.child("photos").child(filePath.getLastPathSegment());
             filePathStorage.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -132,15 +133,26 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 
-    private void addItemToDb() {
+    private void addItemToDb(View view) {
+        final View v = view;
 
         final String id = products.push().getKey();
          String[] downloadUrl = new String[3];
         if(bytearray != null)
         {
+            final ProgressDialog pd = new ProgressDialog(this);
+            pd.setMessage("Adding item");
+            pd.show();
 
             final StorageReference filePathStorage = storage.child("photos").child(id);
             UploadTask task = filePathStorage.putBytes(bytearray);
+            task.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * (taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount()));
+                    pd.setMessage("Adding item " + progress + "%");
+                }
+            });
 
             task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -155,6 +167,9 @@ public class AdminActivity extends AppCompatActivity {
                     product.setDescription(itemDescription.getText().toString());
                     product.setImageUrl(urlD);
                     products.child(id).setValue(product);
+                    pd.dismiss();
+                    Snackbar.make(v, "Product Added", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

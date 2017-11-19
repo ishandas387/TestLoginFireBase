@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="@android:color/holo_blue_light"
+    android:background="@android:color/holo_red_dark"
     tools:context="com.ishan387.testlogin.Home"
     tools:showIn="@layout/app_bar_home"
    >
@@ -24,7 +24,7 @@
         <android.support.v7.widget.RecyclerView
             android:layout_below="@+id/searchbar"
             android:id="@+id/recycler_view"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />

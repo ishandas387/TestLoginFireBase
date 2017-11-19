@@ -49,6 +49,7 @@
                         android:layout_marginBottom="10dp" android:background="@drawable/shape">
                        <ImageButton
                            android:layout_width="wrap_content"
+                           android:id="@+id/deletebutton"
                            android:layout_height="wrap_content" android:background="@null" android:src="@drawable/delete" android:layout_margin="3dp"/>
                     </LinearLayout>
                 </LinearLayout>

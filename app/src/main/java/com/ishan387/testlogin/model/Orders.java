@@ -17,8 +17,9 @@ public class Orders {
     List<Product> products;
     String serviceTime;
     String total;
+    int status;
 
-    public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<Product> products, String serviceTime, String total, String userPhoneNumber) {
+    public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<Product> products, String serviceTime, String total, int status, String userPhoneNumber) {
         this.timeStamp = timeStamp;
         this.orderId = orderId;
         this.productId = productId;
@@ -27,6 +28,7 @@ public class Orders {
         this.products = products;
         this.serviceTime = serviceTime;
         this.total = total;
+        this.status = status;
         this.userPhoneNumber = userPhoneNumber;
     }
 
@@ -39,6 +41,14 @@ public class Orders {
     }
 
     String userPhoneNumber;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public String getUserName() {
         return userName;

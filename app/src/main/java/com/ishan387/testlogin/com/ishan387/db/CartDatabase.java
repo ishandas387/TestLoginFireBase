@@ -25,6 +25,8 @@ public class CartDatabase extends SQLiteAssetHelper {
         super(context, DB_NAME,null,DB_VER);
     }
 
+
+
     public List<CartItems> getCart(){
 
         SQLiteDatabase db = getReadableDatabase();
@@ -64,6 +66,13 @@ public class CartDatabase extends SQLiteAssetHelper {
     {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("DELETE FROM SBCART");
+        db.execSQL(query);
+    }
+
+    public void deleteItem(String itemName)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("DELETE FROM SBCART WHERE productName = '"+ itemName+"'");
         db.execSQL(query);
     }
 }

@@ -61,6 +61,8 @@ public class Cart extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         loadList();
 
+
+
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +109,7 @@ public class Cart extends AppCompatActivity {
                    o.setUserPhoneNumber(editText.getText().toString());
                    o.setOrderId(String.valueOf(System.currentTimeMillis()));
                    o.setProducts(productList);
+                   o.setStatus(0);
                    Float tot =0.0f;
                    for(Product pt : productList)
                    {

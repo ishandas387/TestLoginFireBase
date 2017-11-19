@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ishan387.testlogin.Cart;
 import com.ishan387.testlogin.R;
+import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +32,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(CartViewHolder holder, int position) {
+    public void onBindViewHolder(CartViewHolder holder, final int position) {
 
         holder.price.setText(lisData.get(position).getPrice());
         holder.item.setText(lisData.get(position).getProductName());
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                CartItems theRemovedItem = lisData.get(position);
+                // remove your item from data base
+
+                new CartDatabase(v.getContext()).deleteItem(theRemovedItem.getProductName());
+                lisData.remove(position);  // remove the item from list
+                notifyItemRemoved(position); // notify the adapter about the removed item
+            }
+        });
 
     }
 
