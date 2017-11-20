@@ -29,7 +29,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder  implements View.
         title = (TextView) view.findViewById(R.id.title);
         category = (TextView) view.findViewById(R.id.category);
         price = (TextView) view.findViewById(R.id.price);
-        r2 = (RelativeLayout) view.findViewById(R.id.layoutphoto) ;
+       // r2 = (RelativeLayout) view.findViewById(R.id.layoutphoto) ;
         bgi =(ImageView) view.findViewById(R.id.imphoto);
         view.setOnClickListener(this);
 
