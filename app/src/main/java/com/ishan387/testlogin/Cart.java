@@ -37,7 +37,16 @@ public class Cart extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     FirebaseDatabase database;
     DatabaseReference orderrequest;
-    TextView total;
+
+    public TextView getTotal() {
+        return total;
+    }
+
+    public void setTotal(TextView total) {
+        this.total = total;
+    }
+
+    public TextView total;
     List<CartItems> itemsInCart = new ArrayList<>();
     CartAdapter adapter;
     Button placeOrder;

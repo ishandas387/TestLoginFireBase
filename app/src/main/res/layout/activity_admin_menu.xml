@@ -1,0 +1,72 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context="com.ishan387.testlogin.AdminMenu">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+   <TableLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent" >
+
+
+       <TableRow
+           android:layout_height="wrap_content"
+           android:layout_width="fill_parent"
+           android:gravity="center_horizontal" android:weightSum="10">
+
+           <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textColor="@android:color/white" android:layout_weight="2" android:text="View Orders" android:textSize="15sp" />
+
+           <Button android:id="@+id/vieworders" android:layout_weight="6" android:layout_width="match_parent" android:layout_height="200dp"
+               android:background="@drawable/viewordericon"/>
+       </TableRow>
+
+       <!-- Row 2 with 3 columns -->
+
+
+       <TableRow
+           android:id="@+id/tableRow1"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent" android:gravity="center_horizontal" android:weightSum="10">
+
+           <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textColor="@android:color/white" android:layout_weight="2" android:text="Add Service" android:textSize="15sp" />
+
+           <Button android:id="@+id/additem" android:layout_weight="6" android:layout_width="match_parent" android:layout_height="200dp"
+               android:background="@drawable/additem"/>
+
+
+       </TableRow>
+   </TableLayout>
+<!--
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/dummy_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dummy_button" />
+
+        </LinearLayout>
+    </FrameLayout>-->
+    </ScrollView>
+
+</FrameLayout>

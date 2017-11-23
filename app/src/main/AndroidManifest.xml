@@ -47,7 +47,12 @@
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".Cart" />
         <activity android:name=".ViewOrders" />
-        <activity android:name=".OrderStatus"></activity>
+        <activity android:name=".OrderStatus" />
+        <activity
+            android:name=".AdminMenu"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_admin_menu"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
