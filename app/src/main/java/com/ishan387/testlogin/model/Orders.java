@@ -14,12 +14,12 @@ public class Orders {
     String productId;
     String userName;
     String uid;
-    List<Product> products;
+    List<OrderItem> products;
     String serviceTime;
     String total;
     int status;
 
-    public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<Product> products, String serviceTime, String total, int status, String userPhoneNumber) {
+    public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<OrderItem> products, String serviceTime, String total, int status, String userPhoneNumber) {
         this.timeStamp = timeStamp;
         this.orderId = orderId;
         this.productId = productId;
@@ -58,7 +58,7 @@ public class Orders {
         return uid;
     }
 
-    public List<Product> getProducts() {
+    public List<OrderItem> getProducts() {
         return products;
     }
 
@@ -75,7 +75,7 @@ public class Orders {
         this.uid = uid;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<OrderItem> products) {
         this.products = products;
     }
 

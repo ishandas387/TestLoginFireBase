@@ -106,26 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="300dp" android:orientation="vertical">
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/selectdate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:padding="12dp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:text="Date"
-                    android:textColor="@android:color/white"
-                    android:elevation="10dp"/>
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/selecttime"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:padding="12dp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:text="TIME"
-                    android:textColor="@android:color/white"
-                    android:elevation="10dp"/>
+
 
                 <TextView
                     android:textColor="@android:color/black"

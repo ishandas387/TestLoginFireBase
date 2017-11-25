@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Firebase Authentication</string>
+    <string name="app_name">Siri's Beauty</string>
 
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
     <string name="desc_google_sign_in">Use a Google Sign In credential to authenticate with Firebase.</string>
@@ -133,4 +133,5 @@
     <string name="essay">We make absolutely no changes to this Activity file. The Activity simply inflates the layout file. Running this activity produces an effect where the FAB scrolls with the first CardView, till the CardView is out of the screen. Note that the FAB doesn’t scroll off screen with the CardView. This can be done with other widgets and views. Also note that the FAB is anchored to a View that is not a direct child of the CoordinatorLayout. You can anchor a view (let’s call it ChildView) to any other view (let’s call this DependecyView) that is within the CoordinatorLayout hierarchy (except when DependencyView is a child of ChildView).;jds</string>
 
     <string name="title_activity_admin_menu">AdminMenu</string>
+    <string name="title_activity_customer_care">CustomerCare</string>
 </resources>

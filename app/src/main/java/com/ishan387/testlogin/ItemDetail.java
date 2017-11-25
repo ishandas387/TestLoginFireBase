@@ -26,7 +26,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
 
-public class ItemDetail extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class ItemDetail extends AppCompatActivity  {
 
 
     TextView name;
@@ -36,7 +36,7 @@ public class ItemDetail extends AppCompatActivity implements DatePickerDialog.On
     String productId;
     FirebaseDatabase products;
     DatabaseReference prod;
-    Button selectDate, selectTime;
+
     Product p;
 
     @Override
@@ -47,76 +47,37 @@ public class ItemDetail extends AppCompatActivity implements DatePickerDialog.On
         products = FirebaseDatabase.getInstance();
         prod = products.getReference("Products");
         fab = (FloatingActionButton) findViewById(R.id.cart);
-        name =(TextView) findViewById(R.id.name);
-        bgi =(ImageView) findViewById(R.id.backgroundimage);
-        selectDate =(Button) findViewById(R.id.selectdate);
-        selectTime =(Button) findViewById(R.id.selecttime);
+        name = (TextView) findViewById(R.id.name);
+        bgi = (ImageView) findViewById(R.id.backgroundimage);
+
 
         clayout = (CollapsingToolbarLayout) findViewById(R.id.clayout);
 
         clayout.setExpandedTitleTextAppearance(R.style.expandclayout);
         clayout.setCollapsedTitleTextAppearance(R.style.collapsedclayout);
 
-        if(getIntent() != null)
-        {
+        if (getIntent() != null) {
             productId = getIntent().getStringExtra("productId");
 
         }
-        if(!productId.isEmpty())
-        {
+        if (!productId.isEmpty()) {
             getProductDetails();
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CartItems cartItem = new CartItems(productId,p.getName(),Float.toString(p.getPrice()),"9am");
+                String serviceDate = "";
+                String serviceTime = "";
+
+                CartItems cartItem = new CartItems(productId, p.getName(), Float.toString(p.getPrice()), serviceDate + "//" + serviceTime);
                 new CartDatabase(getBaseContext()).addToCart(cartItem);
                 Toast.makeText(ItemDetail.this, "Added to cart",
                         Toast.LENGTH_SHORT).show();
             }
         });
-
-        selectDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-               DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(ItemDetail.this,
-
-                       now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)
-               );
-               datePickerDialog.setTitle("SELECT SERVICE DATE");
-               datePickerDialog.show(getFragmentManager(),"Date");
-               datePickerDialog.setMinDate(now);
-               Calendar now7 =now;
-               now7.add(Calendar.DAY_OF_MONTH,7);
-               datePickerDialog.setMinDate(now);
-               datePickerDialog.setMaxDate(now7);
-
-            }
-        });
-
-        selectTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(ItemDetail.this,
-
-                        now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND),true
-                );
-                timePickerDialog.setTitle("SELECT SERVICE TIME");
-                timePickerDialog.show(getFragmentManager(),"TIME");
-                timePickerDialog.setTimeInterval(7);
-                timePickerDialog.setMinTime( now.get(Calendar.HOUR_OF_DAY)+1, now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
-                timePickerDialog.setMinTime( now.get(Calendar.HOUR_OF_DAY)+7, now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
-
-
-
-            }
-        });
-
-
     }
+
 
 
 
@@ -140,15 +101,5 @@ public class ItemDetail extends AppCompatActivity implements DatePickerDialog.On
 
 
 
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
-        selectDate.setText(monthOfYear+"-"+dayOfMonth);
-
-    }
-
-    @Override
-    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-
-    }
 }
