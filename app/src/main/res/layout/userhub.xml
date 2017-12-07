@@ -46,6 +46,12 @@
                 layout="@layout/user_recycler_view"
                 />-->
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TEST" android:id="@+id/username"
+                />
+
         </LinearLayout>
     </FrameLayout>
 
@@ -53,7 +59,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="ORDER HISTORY"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:layout_marginLeft="10dp"
         android:textSize="14sp"
         />
