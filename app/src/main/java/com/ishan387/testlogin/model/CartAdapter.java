@@ -35,7 +35,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>
     @Override
     public void onBindViewHolder(CartViewHolder holder, final int position) {
 
-        holder.price.setText(lisData.get(position).getPrice());
+        holder.price.setText("₹" +lisData.get(position).getPrice());
         holder.item.setText(lisData.get(position).getProductName());
         final String priceOfItem = holder.price.getText().toString();
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {

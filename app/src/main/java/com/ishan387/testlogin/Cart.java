@@ -1,12 +1,12 @@
 package com.ishan387.testlogin;
 
 import android.content.DialogInterface;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,11 +23,8 @@ import com.ishan387.testlogin.model.CartAdapter;
 import com.ishan387.testlogin.model.CartItems;
 import com.ishan387.testlogin.model.OrderItem;
 import com.ishan387.testlogin.model.Orders;
-import com.ishan387.testlogin.model.Product;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
-
-import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -78,54 +75,12 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         loadList();
 
 
-
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (productList.isEmpty())
-                {
-                    Toast.makeText(Cart.this,"Cart is empty",Toast.LENGTH_LONG).show();
-
-                }
-                else
-                {
-
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    Orders o = new  Orders();
-                    // o.setUserPhoneNumber(editText.getText().toString());
-                    o.setOrderId(String.valueOf(System.currentTimeMillis()));
-                    if(currentUser!=null)
-                    {
-                        o.setUserName(currentUser.getDisplayName());
-                    }
-                    o.setProducts(productList);
-                    String date = "";
-                    String time="";
-
-                    if(!selectDate.getText().toString().equals("DATE"))
-                    {
-                        date = selectDate.getText().toString();
-                    }
-                    if(!selectTime.getText().toString().equals("TIME"))
-                    {
-                        date = selectTime.getText().toString();
-                    }
-                    o.setServiceTime(date+"-"+time);
-                    Float tot =0.0f;
-                    for(OrderItem pt : productList)
-                    {
-                        tot += pt.getPrice();
-                    }
-                    o.setTotal(tot.toString());
-                    orderrequest.child(o.getOrderId()).setValue(o);
-                    new CartDatabase(getBaseContext()).cleanCart();
-                    Toast.makeText(Cart.this,"Order placed",Toast.LENGTH_LONG).show();
-                    finish();
-
-                }
-
-             //  showAlertDialog();
+               // placeorderMethod(editText.getText().toString());
+             showAlertDialog();
             }
         });
 
@@ -141,7 +96,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
                 datePickerDialog.setTitle("SELECT SERVICE DATE");
                 datePickerDialog.show(getFragmentManager(),"Date");
                 datePickerDialog.setMinDate(now);
-                Calendar now7 =now;
+                Calendar now7 =Calendar.getInstance();
                 now7.add(Calendar.DAY_OF_MONTH,7);
                 datePickerDialog.setMaxDate(now7);
 
@@ -158,19 +113,68 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
                 );
                 timePickerDialog.setTitle("SELECT SERVICE TIME");
                 timePickerDialog.show(getFragmentManager(),"TIME");
-                timePickerDialog.setTimeInterval(7);
-                timePickerDialog.setMinTime( now.get(Calendar.HOUR_OF_DAY)+1, now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
+                timePickerDialog.setMinTime(8,0,0);
+                timePickerDialog.setMaxTime(18,0,0);
+               // timePickerDialog.setTimeInterval(7);
+              /*  timePickerDialog.setMinTime( now.get(Calendar.HOUR_OF_DAY)+1, now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
                 timePickerDialog.setMaxTime( now.get(Calendar.HOUR_OF_DAY)+7, now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
-            }
+       */     }
         });
     }
 
+    private void placeorderMethod(String userPhoneNumber) {
+        if (productList.isEmpty())
+        {
+            Toast.makeText(Cart.this,"Cart is empty",Toast.LENGTH_LONG).show();
+
+        }
+        else
+        {
+
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            Orders o = new  Orders();
+            // o.setUserPhoneNumber(editText.getText().toString());
+            o.setOrderId(String.valueOf(System.currentTimeMillis()));
+            if(currentUser!=null)
+            {
+                o.setUserName(currentUser.getDisplayName());
+            }
+            o.setProducts(productList);
+            String date = "";
+            String time="";
+
+            if(!selectDate.getText().toString().equals("DATE"))
+            {
+                date = selectDate.getText().toString();
+            }
+            if(!selectTime.getText().toString().equals("TIME"))
+            {
+                date = selectTime.getText().toString();
+            }
+            o.setServiceTime(date+"-"+time);
+            o.setUserPhoneNumber(userPhoneNumber);
+            Float tot =0.0f;
+            for(OrderItem pt : productList)
+            {
+                tot += pt.getPrice();
+            }
+            o.setTotal(tot.toString());
+            orderrequest.child(o.getOrderId()).setValue(o);
+            new CartDatabase(getBaseContext()).cleanCart();
+            Toast.makeText(Cart.this,"Order placed",Toast.LENGTH_LONG).show();
+            finish();
+
+        }
+    }
 
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One more step");
         alertDialog.setMessage("Add your phone number");
         final EditText editText = new EditText(Cart.this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER
+
+        );
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         editText.setLayoutParams(lp);
         alertDialog.setView(editText);
@@ -180,21 +184,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
             public void onClick(DialogInterface dialog, int which) {
                if(null != editText.getText() && !editText.getText().toString().isEmpty())
                {
-                   Orders o = new  Orders();
-                   o.setUserPhoneNumber(editText.getText().toString());
-                   o.setOrderId(String.valueOf(System.currentTimeMillis()));
-                   o.setProducts(productList);
-                   o.setStatus(0);
-                   o.setServiceTime(productList.get(0).getTime());
-                   Float tot =0.0f;
-                   for(OrderItem pt : productList)
-                   {
-                       tot += pt.getPrice();
-                   }
-                   o.setTotal(tot.toString());
-                   orderrequest.child(o.getTimeStamp()).setValue(o);
-                   new CartDatabase(getBaseContext()).cleanCart();
-                   Toast.makeText(Cart.this,"Order placed",Toast.LENGTH_LONG).show();
+                  placeorderMethod(editText.getText().toString());
                }
                else
                {
@@ -209,6 +199,8 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
                 dialog.dismiss();
             }
         });
+
+        alertDialog.show();
     }
 
     private void loadList() {
@@ -229,13 +221,54 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         }
         Locale local = new Locale("en","IN");
         NumberFormat n = NumberFormat.getCurrencyInstance(local);
-        total.setText(Float.toString(t));
+        total.setText("₹" +Float.toString(t));
     }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
-        selectDate.setText(monthOfYear+"-"+dayOfMonth);
+        String m="";
+        switch(monthOfYear)
+        {
+            case 0:
+                m="Jan";
+                break;
+            case 1:
+                m="Feb";
+                break;
+            case 2:
+                m="Mar";
+                break;
+            case 3:
+                m="Apr";
+                break;
+            case 4:
+                m="May";
+                break;
+            case 5:
+                m="Jun";
+                break;
+            case 6:
+                m="Jul";
+                break;
+            case 7:
+                m="Aug";
+                break;
+            case 8:
+                m="Sep";
+                break;
+            case 9:
+                m="Oct";
+                break;
+            case 10:
+                m="Nov";
+                break;
+            case 11:
+                m="Dec";
+                break;
+        }
+
+        selectDate.setText(m+"-"+dayOfMonth);
     }
 
     @Override

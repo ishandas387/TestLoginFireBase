@@ -70,7 +70,7 @@ public class ItemDetail extends AppCompatActivity  {
                 String serviceDate = "";
                 String serviceTime = "";
 
-                CartItems cartItem = new CartItems(productId, p.getName(), Float.toString(p.getPrice()), serviceDate + "//" + serviceTime);
+                CartItems cartItem = new CartItems(productId, p.getName(), Float.toString(p.getPrice()), serviceDate + "/" + serviceTime);
                 new CartDatabase(getBaseContext()).addToCart(cartItem);
                 Toast.makeText(ItemDetail.this, "Added to cart",
                         Toast.LENGTH_SHORT).show();

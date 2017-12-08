@@ -269,7 +269,7 @@ public class Home extends AppCompatActivity
             protected void populateViewHolder(final ProductViewHolder viewHolder, Product model, int position) {
 
                 viewHolder.category.setText(model.getCategory());
-                viewHolder.price.setText(Float.toString(model.getPrice()));
+                viewHolder.price.setText("₹" +Float.toString(model.getPrice()));
                 viewHolder.title.setText(model.getName());
                 suggestionList.add(model.getName());
                 if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
@@ -365,7 +365,7 @@ public class Home extends AppCompatActivity
             startActivity(i);
 
         } else if (id == R.id.nav_admin) {
-            Intent i = new Intent(getApplicationContext(),AdminActivity.class);
+            Intent i = new Intent(getApplicationContext(),AdminMenu.class);
             startActivity(i);
 
         } else if (id == R.id.nav_share) {

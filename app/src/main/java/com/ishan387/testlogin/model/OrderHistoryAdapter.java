@@ -36,6 +36,21 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryViewHo
         holder.orderPrice.setText(lisData.get(position).getTotal());
         holder.orderId.setText(lisData.get(position).getTimeStamp());
         holder.orderTime.setText(lisData.get(position).getServiceTime());
+        String statusSet="Placed";
+
+        if (lisData.get(position).getStatus() == 0)
+        {
+            statusSet="Placed";
+        }
+        else if(lisData.get(position).getStatus() == 1)
+        {
+            statusSet="Confirmed";
+        }
+        else if (lisData.get(position).getStatus() == 2)
+        {
+            statusSet="Rejected";
+        }
+        holder.orderPrice.setText(statusSet);
     }
 
     @Override
