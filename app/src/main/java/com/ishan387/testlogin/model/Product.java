@@ -1,5 +1,6 @@
 package com.ishan387.testlogin.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -86,6 +87,10 @@ public class Product {
     }
 
     public List<Review> getReviewList() {
+        if (null == reviewList)
+        {
+            reviewList = new ArrayList<>();
+        }
         return reviewList;
     }
 

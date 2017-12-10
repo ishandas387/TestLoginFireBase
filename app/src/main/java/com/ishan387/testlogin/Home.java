@@ -302,12 +302,21 @@ public class Home extends AppCompatActivity
 
     private void loadNavHeader(String url, FirebaseAuth mAuth) {
         // Loading profile image
-        Glide.with(this).load(url)
-                .crossFade()
-                .thumbnail(0.5f)
-                .bitmapTransform(new CircleTransform(this))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imgProfile);
+        if(null != url || !url.isEmpty())
+        {
+
+            Glide.with(this).load(url)
+                    .crossFade()
+                    .thumbnail(0.75f)
+                    .bitmapTransform(new CircleTransform(this))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgProfile);
+        }
+        else
+        {
+            imgProfile.setBackgroundResource(R.mipmap.ic_launcher);
+
+        }
        username.setText( mAuth.getCurrentUser().getDisplayName());
        useremail.setText(mAuth.getCurrentUser().getEmail());
     }

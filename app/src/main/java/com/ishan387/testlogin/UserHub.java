@@ -66,9 +66,23 @@ public class UserHub extends AppCompatActivity {
             protected void populateViewHolder(final OrderHistoryViewHolder viewHolder, Orders model, int position) {
 
                 viewHolder.orderTime.setText(model.getServiceTime());
-                viewHolder.orderId.setText(model.getTimeStamp());
+                viewHolder.orderId.setText(model.getOrderId());
                 viewHolder.orderPrice.setText(model.getTotal());
+                String statusSet="Placed";
 
+                if (model.getStatus() == 0)
+                {
+                    statusSet="Placed";
+                }
+                else if(model.getStatus() == 1)
+                {
+                    statusSet="Confirmed";
+                }
+                else if (model.getStatus() == 2)
+                {
+                    statusSet="Rejected";
+                }
+                viewHolder.status.setText(statusSet);
             }
         };
         recyclerView.setAdapter(adapter);

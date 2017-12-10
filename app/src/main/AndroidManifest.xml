@@ -58,8 +58,12 @@
             android:name=".CustomerCare"
             android:label="@string/title_activity_customer_care"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".UserHub"
+        <activity
+            android:name=".UserHub"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AdminAcceptReject"
+            android:label="@string/title_activity_admin_accept_reject"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

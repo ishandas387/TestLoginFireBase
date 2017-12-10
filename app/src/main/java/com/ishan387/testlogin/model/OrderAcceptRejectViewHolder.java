@@ -1,0 +1,41 @@
+package com.ishan387.testlogin.model;
+
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.ishan387.testlogin.R;
+import com.ishan387.testlogin.onClickInterface;
+
+/**
+ * Created by ishan on 09-12-2017.
+ */
+
+public class OrderAcceptRejectViewHolder  extends RecyclerView.ViewHolder implements View.OnClickListener  {
+    public TextView orderId, orderPrice, orderTime,status,customerName,customerPh;
+    public ImageButton accept, reject;
+
+    public void setItemClickListener(onClickInterface itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    private onClickInterface itemClickListener;
+    public OrderAcceptRejectViewHolder(View itemView) {
+        super(itemView);
+        orderId = (TextView) itemView.findViewById(R.id.orderidacceptreject);
+        orderPrice = (TextView) itemView.findViewById(R.id.totalpriceacceptreject);
+        orderTime = (TextView) itemView.findViewById(R.id.servicetimeacceptreject);
+        status = (TextView) itemView.findViewById(R.id.orderstatusacceptreject);
+        customerName = (TextView) itemView.findViewById(R.id.customername);
+        customerPh = (TextView) itemView.findViewById(R.id.ph);
+        accept =(ImageButton) itemView.findViewById(R.id.acceptbutton);
+        reject =(ImageButton) itemView.findViewById(R.id.rejectbutton);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+}

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Siri's Beauty</string>
+    <string name="app_name">Sri\'s Beauty</string>
 
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
     <string name="desc_google_sign_in">Use a Google Sign In credential to authenticate with Firebase.</string>
@@ -118,11 +118,26 @@
     <string name="title_activity_admin_activuty">AdminActivuty</string>
     <array name="type">
 
-        <item>category1</item>
-        <item>category2</item>
-        <item>category3</item>
-        ++++
-        <item>category4</item>
+        <item>Special packages</item>
+        <item>Lotus Facial</item>
+        <item>Clean Up</item>
+        <item>Body Spa</item>
+        <item>Bleach Services</item>
+        <item>Make Up</item>
+        <item>Massages</item>
+        <item>Natures Professional</item>
+        <item>O3 Services</item>
+        <item>Raga Proffesionals</item>
+        <item>Rica Wax</item>
+        <item>Body Polishing</item>
+        <item>Hair Colours</item>
+        <item>Hair Cuts</item>
+        <item>Hair Spa</item>
+        <item>Manicure</item>
+        <item>Mehendi</item>
+        <item>Pedicure</item>
+        <item>Saree Draping</item>
+        <item>Waxing</item>
 
     </array>
 
@@ -134,4 +149,5 @@
 
     <string name="title_activity_admin_menu">AdminMenu</string>
     <string name="title_activity_customer_care">CustomerCare</string>
+    <string name="title_activity_admin_accept_reject">Process orders</string>
 </resources>

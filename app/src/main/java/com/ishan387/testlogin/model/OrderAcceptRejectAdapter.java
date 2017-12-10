@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ishan on 07-12-2017.
+ * Created by ishan on 09-12-2017.
  */
 
-public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryViewHolder> {
+public class OrderAcceptRejectAdapter extends RecyclerView.Adapter<OrderAcceptRejectViewHolder> {
 
-    public OrderHistoryAdapter(List<Orders> lisData, Context context) {
+    public OrderAcceptRejectAdapter(List<Orders> lisData, Context context) {
         this.lisData = lisData;
         this.context = context;
     }
@@ -25,17 +25,20 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryViewHo
     private List<Orders> lisData = new ArrayList<>();
     private Context context;
     @Override
-    public OrderHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OrderAcceptRejectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.orderhistorysinglerow,parent,false);
-        return new OrderHistoryViewHolder(itemView);
+        View itemView = inflater.inflate(R.layout.acceptrejctsingleview,parent,false);
+        return new OrderAcceptRejectViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(OrderHistoryViewHolder holder, int position) {
+    public void onBindViewHolder(OrderAcceptRejectViewHolder holder, int position) {
         holder.orderPrice.setText(lisData.get(position).getTotal());
         holder.orderId.setText(lisData.get(position).getTimeStamp());
         holder.orderTime.setText(lisData.get(position).getServiceTime());
+        holder.customerName.setText(lisData.get(position).getUserName());
+        holder.customerPh.setText(lisData.get(position).getUserPhoneNumber());
+
         String statusSet="Placed";
 
         if (lisData.get(position).getStatus() == 0)
@@ -51,6 +54,13 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryViewHo
             statusSet="Rejected";
         }
         holder.status.setText(statusSet);
+        holder.accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     @Override

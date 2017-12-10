@@ -109,7 +109,7 @@ public class AdminMenu extends AppCompatActivity {
         viewOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),AdminActivity.class);
+                Intent i = new Intent(getApplicationContext(),AdminAcceptReject.class);
                 startActivity(i);
             }
         });

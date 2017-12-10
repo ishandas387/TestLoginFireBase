@@ -11,6 +11,23 @@ public class Review {
     String userName;
     float rating;
     String review;
+    String userEmail;
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public Review(String userName, float rating, String review, String userEmail, Date date) {
+        this.userName = userName;
+        this.rating = rating;
+        this.review = review;
+        this.userEmail = userEmail;
+        this.date = date;
+    }
 
     Date date;
 

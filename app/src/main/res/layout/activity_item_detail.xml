@@ -22,7 +22,7 @@
             app:contentScrim="#0e0d0e"
             app:expandedTitleTextAppearance="@android:color/transparent"
             android:id="@+id/clayout"
-            >
+            >  
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -58,6 +58,18 @@
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right"/>
 
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingbutton"
+        android:src="@drawable/ic_action_rate"
+        android:backgroundTint="@android:color/white"
+        android:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|left"/>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -79,9 +91,16 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content" android:orientation="vertical">
 
-             <TextView
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rating="0"
+                    android:max="5"
+                    android:id="@+id/ratngbar" />
+                <TextView
                     android:layout_height="wrap_content"
                  android:layout_width="wrap_content"
                  android:id="@+id/name"
@@ -92,6 +111,7 @@
                  android:textColor="@color/colorPrimary"
                  android:textStyle="bold"
                  >
+
 
              </TextView>
 
