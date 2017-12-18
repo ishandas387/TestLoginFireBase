@@ -42,16 +42,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>
             public void onClick(View v) {
                 CartItems theRemovedItem = lisData.get(position);
                 // remove your item from data base
-               /* Cart c = new Cart();
-                TextView t = c.getTotal();*/
+
+               ;
                 new CartDatabase(v.getContext()).deleteItem(theRemovedItem.getProductName());
                 lisData.remove(position);  // remove the item from list
                 notifyItemRemoved(position);
-              /*  t.setText(getNewTotal(priceOfItem,c.total.getText().toString()));
+
+              /*t.setText(getNewTotal(priceOfItem,c.total.getText().toString()));
                 c.setTotal(t);*/
                 // notify the adapter about the removed item
             }
         });
+
 
     }
 

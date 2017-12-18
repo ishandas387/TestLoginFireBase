@@ -20,7 +20,7 @@ public class CartDatabase extends SQLiteAssetHelper {
 
 
     private static final  String DB_NAME="Sbcartdb.db";
-    private static final int DB_VER= 1;
+    private static final int DB_VER= 2;
     public CartDatabase(Context context) {
         super(context, DB_NAME,null,DB_VER);
     }

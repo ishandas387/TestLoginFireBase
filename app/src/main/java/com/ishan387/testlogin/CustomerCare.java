@@ -26,12 +26,15 @@ public class CustomerCare extends AppCompatActivity {
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "08527678238"));
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "111111111123445"));
                 if (ActivityCompat.checkSelfPermission(CustomerCare.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(CustomerCare.this, "Hey Marshmellow Smarty\nAuthorize This app to make calls", Toast.LENGTH_SHORT).show();
-                    return;
+                    Toast.makeText(CustomerCare.this, "Authorize this app to make calls", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(CustomerCare.this, new String[]{Manifest.permission.CALL_PHONE},1);
                 }
-                startActivity(intent);
+                else {
+
+                    startActivity(intent);
+                }
 
             }
         });

@@ -64,7 +64,8 @@
         <activity
             android:name=".AdminAcceptReject"
             android:label="@string/title_activity_admin_accept_reject"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UserAdd"></activity>
     </application>
 
 </manifest>

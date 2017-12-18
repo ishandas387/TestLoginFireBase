@@ -335,7 +335,7 @@ public class LoginActivity extends AppCompatActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "Authentication passed."+user.getDisplayName(),
+                            Toast.makeText(LoginActivity.this, "Welcome.."+user.getDisplayName(),
                                     Toast.LENGTH_SHORT).show();
                             adduserToUserTable(user);
                             Intent i = new Intent(getApplicationContext(),Home.class);

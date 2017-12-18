@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,15 +23,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
+import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
 import com.ishan387.testlogin.model.OrderHistoryAdapter;
 import com.ishan387.testlogin.model.OrderHistoryViewHolder;
 import com.ishan387.testlogin.model.Orders;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.ProductViewHolder;
+import com.ishan387.testlogin.model.Users;
+
+import java.util.List;
 
 public class UserHub extends AppCompatActivity {
 
     TextView username,useremail;
+    Button edit ;
     private FirebaseAuth mAuth;
     private RecyclerView recyclerView;
     DatabaseReference orders;
@@ -56,6 +63,19 @@ public class UserHub extends AppCompatActivity {
         }
         orders = FirebaseDatabase.getInstance().getReference("Orders");
         filter = orders.orderByChild("userName").equalTo(user.getDisplayName());
+        edit = (Button) findViewById(R.id.editupdate);
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(UserHub.this,UserAdd.class);
+                startActivity(i);
+            }
+        });
+        Users u = new Users();
+        List<Users> userDetails = new UserDatabase(this).getUser();
+        if(userDetails!= null && !userDetails.isEmpty())
+         u = userDetails.get(0);
+        username.setText(u.getNm());
             loadRecylerView(filter);
 
     }

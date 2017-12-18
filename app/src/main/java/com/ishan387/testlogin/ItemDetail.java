@@ -6,6 +6,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,9 +24,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
+
 import com.ishan387.testlogin.model.CartItems;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.Review;
+import com.ishan387.testlogin.model.ReviewAdapter;
 import com.squareup.picasso.Picasso;
 
 import com.stepstone.apprating.AppRatingDialog;
@@ -51,6 +56,8 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
     FloatingActionButton ratingButton;
     FirebaseUser user;
     private FirebaseAuth mAuth;
+    private RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +81,14 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
             }
         });
 
+        recyclerView =(RecyclerView) findViewById(R.id.reviewlist);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setLayoutManager(layoutManager);
+
 
         clayout = (CollapsingToolbarLayout) findViewById(R.id.clayout);
 
@@ -86,6 +101,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         }
         if (!productId.isEmpty()) {
             getProductDetails();
+
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +157,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
                     }
                     float average = sum/count;
                     ratingbar.setRating(average);
+                    settingListOfReviews(currentReviewList);
                 }
             }
 
@@ -149,6 +166,13 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
 
             }
         });
+    }
+
+    private void settingListOfReviews(List<Review> currentReviewList) {
+
+        ReviewAdapter adapter = new ReviewAdapter(currentReviewList, this);
+        recyclerView.setAdapter(adapter);
+
     }
 
 

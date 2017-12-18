@@ -52,6 +52,17 @@
                 android:text="TEST" android:id="@+id/username"
                 />
 
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/editupdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="5"
+                android:background="@android:color/holo_blue_dark"
+                android:text="TIME"
+                android:textColor="@android:color/white"
+                android:elevation="10dp"/>
+
         </LinearLayout>
     </FrameLayout>
 

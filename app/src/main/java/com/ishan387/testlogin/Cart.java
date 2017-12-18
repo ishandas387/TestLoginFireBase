@@ -75,6 +75,8 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         loadList();
 
 
+
+
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
