@@ -89,7 +89,7 @@
     </style>
 
     <style name="RatingDialogueStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name = "android:background">@android:color/white</item>
+        <item name="android:background">@android:color/white</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/RatingDialogueButtonStyle</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/RatingDialogueButtonStyle</item>
 
@@ -101,6 +101,7 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
 
     </style>
+
     <style name="RatingDialogueFadeAnimation">
 
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>

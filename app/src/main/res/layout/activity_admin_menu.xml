@@ -40,6 +40,18 @@
 
 
        </TableRow>
+       <TableRow
+           android:id="@+id/tableRow2"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent" android:gravity="center_horizontal" android:weightSum="10">
+
+           <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textColor="@android:color/white" android:layout_weight="2" android:text="Offers" android:textSize="15sp" />
+
+           <Button android:id="@+id/offer" android:layout_weight="6" android:layout_width="match_parent" android:layout_height="200dp"
+               android:background="@drawable/offericon"/>
+
+
+       </TableRow>
    </TableLayout>
 <!--
     <FrameLayout

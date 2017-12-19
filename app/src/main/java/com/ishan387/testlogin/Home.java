@@ -369,7 +369,7 @@ public class Home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_gallery) {
+        if (id == R.id.offerzone) {
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -385,7 +385,7 @@ public class Home extends AppCompatActivity
             try {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "My application name");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sri's Beauty");
                 String sAux = "\nLet me recommend you this application\n\n";
                 sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
                 i.putExtra(Intent.EXTRA_TEXT, sAux);
@@ -399,7 +399,7 @@ public class Home extends AppCompatActivity
         }
         else if (id ==R.id.category)
         {
-            Intent i = new Intent(getApplicationContext(),Category.class);
+            Intent i = new Intent(getApplicationContext(),UserHub.class);
             startActivity(i);
         }
 

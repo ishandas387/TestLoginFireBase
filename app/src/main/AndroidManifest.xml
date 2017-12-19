@@ -65,7 +65,15 @@
             android:name=".AdminAcceptReject"
             android:label="@string/title_activity_admin_accept_reject"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".UserAdd"></activity>
+        <activity android:name=".UserAdd" />
+        <activity
+            android:name=".OfferManagerment"
+            android:label="@string/title_activity_offer_managerment"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddOffer"
+            android:label="@string/title_activity_add_offer"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

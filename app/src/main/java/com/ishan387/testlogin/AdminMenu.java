@@ -34,7 +34,7 @@ public class AdminMenu extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     //private final Handler mHideHandler = new Handler();
     //private View mContentView;
-    Button viewOrders,addItem;
+    Button viewOrders,addItem,offer;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -113,6 +113,17 @@ public class AdminMenu extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
+        offer = (Button) findViewById(R.id.offer);
+        offer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),OfferManagerment.class);
+                startActivity(i);
+            }
+        });
+
         // Set up the user interaction to manually show or hide the system UI.
       /*  mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
