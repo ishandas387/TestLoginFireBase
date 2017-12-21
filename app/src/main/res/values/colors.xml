@@ -18,7 +18,8 @@
 
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
-
+    <color name="bluish">#b9d3ee</color>
+    <color name="lightgreytype">#8c8c8c</color>
     <!-- Screens background color-->
     <color name="bg_screen1">#FF9C33</color>
     <color name="bg_screen2">#20d2bb</color>

@@ -20,10 +20,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.ishan387.testlogin.model.MyDailogueFragment;
 import com.ishan387.testlogin.model.OrderAcceptRejectAdapter;
 import com.ishan387.testlogin.model.OrderAcceptRejectViewHolder;
 import com.ishan387.testlogin.model.OrderHistoryViewHolder;
+import com.ishan387.testlogin.model.OrderItem;
 import com.ishan387.testlogin.model.Orders;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +40,12 @@ public class AdminAcceptReject extends AppCompatActivity {
     DatabaseReference orders;
     FirebaseUser user;
     FirebaseRecyclerAdapter<Orders, OrderAcceptRejectViewHolder> adapter;
+    MyDailogueFragment fragment = new MyDailogueFragment();
+
+    //searchbar
+    FirebaseRecyclerAdapter<Orders, OrderAcceptRejectViewHolder> searchAdapter;
+    List<String> suggestionList = new ArrayList<>();
+    MaterialSearchBar materialSearchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +92,8 @@ public class AdminAcceptReject extends AppCompatActivity {
 */
         loadRecycler(q);
 
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +119,7 @@ public class AdminAcceptReject extends AppCompatActivity {
 
                 viewHolder.orderTime.setText(model.getServiceTime());
                 viewHolder.orderId.setText(model.getOrderId());
-                viewHolder.orderPrice.setText(model.getTotal());
+                viewHolder.orderPrice.setText("₹ "+model.getTotal());
                 viewHolder.customerName.setText(model.getUserName());
                 viewHolder.customerPh.setText(model.getUserPhoneNumber());
                 String statusSet="Placed";
@@ -141,6 +152,26 @@ public class AdminAcceptReject extends AppCompatActivity {
                         model.setStatus(2);
                         orders.child(model.getOrderId()).setValue(model);
                         //toast
+                    }
+                });
+
+                viewHolder.setItemClickListener(new onClickInterface() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        List<OrderItem> pl = model.getProducts();
+                        if(pl !=null)
+                        {
+                            List<String> itemNames = new ArrayList<>();
+                            for (OrderItem oi : pl)
+                            {
+                                itemNames.add(oi.getName());
+                            }
+                            fragment.setListItems(itemNames);
+                            fragment.setAddress(model.getAddress());
+                        }
+
+                        fragment.show(getFragmentManager(),"");
+
                     }
                 });
             }

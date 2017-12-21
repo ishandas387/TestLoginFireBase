@@ -31,11 +31,13 @@ public class OrderAcceptRejectViewHolder  extends RecyclerView.ViewHolder implem
         customerPh = (TextView) itemView.findViewById(R.id.ph);
         accept =(ImageButton) itemView.findViewById(R.id.acceptbutton);
         reject =(ImageButton) itemView.findViewById(R.id.rejectbutton);
+        itemView.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
+        itemClickListener.onClick(v,getAdapterPosition(),false);
 
     }
 }

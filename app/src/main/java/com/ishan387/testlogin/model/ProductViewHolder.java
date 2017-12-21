@@ -3,9 +3,11 @@ package com.ishan387.testlogin.model;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ishan387.testlogin.R;
 import com.ishan387.testlogin.onClickInterface;
@@ -18,6 +20,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder  implements View.
     public TextView title, price, category;
     public RelativeLayout r2 ;
     public ImageView bgi;
+    public ImageButton editItem;
 
     public void setItemClickListener(onClickInterface itemClickListener) {
         this.itemClickListener = itemClickListener;
@@ -31,6 +34,14 @@ public class ProductViewHolder extends RecyclerView.ViewHolder  implements View.
         price = (TextView) view.findViewById(R.id.price);
        // r2 = (RelativeLayout) view.findViewById(R.id.layoutphoto) ;
         bgi =(ImageView) view.findViewById(R.id.imphoto);
+        editItem = (ImageButton) view.findViewById(R.id.edititem);
+        editItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         view.setOnClickListener(this);
 
     }

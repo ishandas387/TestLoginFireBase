@@ -1,7 +1,6 @@
 package com.ishan387.testlogin;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,28 +9,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
-import com.ishan387.testlogin.model.OrderHistoryAdapter;
+import com.ishan387.testlogin.model.MyDailogueFragment;
 import com.ishan387.testlogin.model.OrderHistoryViewHolder;
+import com.ishan387.testlogin.model.OrderItem;
 import com.ishan387.testlogin.model.Orders;
 import com.ishan387.testlogin.model.Product;
-import com.ishan387.testlogin.model.ProductViewHolder;
 import com.ishan387.testlogin.model.Users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserHub extends AppCompatActivity {
@@ -43,6 +36,7 @@ public class UserHub extends AppCompatActivity {
     DatabaseReference orders;
     FirebaseUser user;
     FirebaseRecyclerAdapter<Orders, OrderHistoryViewHolder> adapter;
+    MyDailogueFragment fragment = new MyDailogueFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +77,11 @@ public class UserHub extends AppCompatActivity {
     private void loadRecylerView(Query filter) {
         adapter = new FirebaseRecyclerAdapter<Orders, OrderHistoryViewHolder>(Orders.class,R.layout.orderhistorysinglerow,OrderHistoryViewHolder.class,filter) {
             @Override
-            protected void populateViewHolder(final OrderHistoryViewHolder viewHolder, Orders model, int position) {
+            protected void populateViewHolder(final OrderHistoryViewHolder viewHolder, final Orders model, int position) {
 
                 viewHolder.orderTime.setText(model.getServiceTime());
                 viewHolder.orderId.setText(model.getOrderId());
-                viewHolder.orderPrice.setText(model.getTotal());
+                viewHolder.orderPrice.setText("₹ "+model.getTotal());
                 String statusSet="Placed";
 
                 if (model.getStatus() == 0)
@@ -103,7 +97,28 @@ public class UserHub extends AppCompatActivity {
                     statusSet="Rejected";
                 }
                 viewHolder.status.setText(statusSet);
+
+                viewHolder.setItemClickListener(new onClickInterface() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        List<OrderItem> pl = model.getProducts();
+                        if(pl !=null)
+                        {
+                            List<String> itemNames = new ArrayList<>();
+                            for (OrderItem oi : pl)
+                            {
+                                itemNames.add(oi.getName());
+                            }
+                            fragment.setListItems(itemNames);
+                        }
+
+                        fragment.show(getFragmentManager(),"");
+
+                    }
+                });
             }
+
+
         };
         recyclerView.setAdapter(adapter);
     }

@@ -18,6 +18,29 @@ public class Orders {
     String serviceTime;
     String total;
     int status;
+    String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<OrderItem> products, String serviceTime, String total, int status, String address, String userPhoneNumber) {
+        this.timeStamp = timeStamp;
+        this.orderId = orderId;
+        this.productId = productId;
+        this.userName = userName;
+        this.uid = uid;
+        this.products = products;
+        this.serviceTime = serviceTime;
+        this.total = total;
+        this.status = status;
+        this.address = address;
+        this.userPhoneNumber = userPhoneNumber;
+    }
 
 
     public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<OrderItem> products, String serviceTime, String total, int status, String userPhoneNumber) {

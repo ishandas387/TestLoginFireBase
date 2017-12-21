@@ -26,10 +26,12 @@ public class OrderHistoryViewHolder extends RecyclerView.ViewHolder implements V
         orderPrice = (TextView) itemView.findViewById(R.id.ordertotalprice);
         orderTime = (TextView) itemView.findViewById(R.id.servicetime);
         status = (TextView) itemView.findViewById(R.id.orderstatus);
+        itemView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        itemClickListener.onClick(v,getAdapterPosition(),false);
 
     }
 }

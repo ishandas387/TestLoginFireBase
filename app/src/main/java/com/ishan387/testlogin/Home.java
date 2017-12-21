@@ -1,34 +1,35 @@
 package com.ishan387.testlogin;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.ProductViewHolder;
 import com.mancj.materialsearchbar.MaterialSearchBar;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +176,11 @@ public class Home extends AppCompatActivity
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Getting items");
+        pd.show();
         loadRecylerView();
+        pd.hide();
         materialSearchBar.setLastSuggestions(suggestionList);
         materialSearchBar.addTextChangeListener(new TextWatcher() {
             @Override
@@ -299,14 +303,75 @@ public class Home extends AppCompatActivity
                         startActivity(i);
                     }
                 });
+
+                viewHolder.editItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAlertDialog();
+                    }
+                });
             }
         };
         recyclerView.setAdapter(adapter);
     }
 
+    private void showAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
+        alertDialog.setTitle("Would like to..");
+        final int i;
+        final Button delete = new Button(Home.this);
+        final Button edit = new Button(Home.this);
+        delete.setText("Delete");
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Home.this, "pela",
+                        Toast.LENGTH_SHORT).show();
+                    //i = 1;
+            }
+        });
+        delete.setText("Edit");
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Home.this, "edit",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        delete.setLayoutParams(lp);
+
+        edit.setLayoutParams(lp);
+        alertDialog.setView(delete);
+
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              /*  if(null != editText.getText() && !editText.getText().toString().isEmpty())
+                {
+                    placeorderMethod(editText.getText().toString());
+                }
+                else
+                {
+                    showAlertDialog();
+                }*/
+            }
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
     private void loadNavHeader(String url, FirebaseAuth mAuth) {
         // Loading profile image
-        if(null != url || !url.isEmpty())
+        if(null != url && !url.isEmpty())
         {
 
             Glide.with(this).load(url)

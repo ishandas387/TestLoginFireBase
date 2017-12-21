@@ -1,6 +1,7 @@
 package com.ishan387.testlogin;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,10 +20,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
+import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
 import com.ishan387.testlogin.model.CartAdapter;
 import com.ishan387.testlogin.model.CartItems;
 import com.ishan387.testlogin.model.OrderItem;
 import com.ishan387.testlogin.model.Orders;
+import com.ishan387.testlogin.model.Users;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -39,21 +42,31 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
     FirebaseDatabase database;
     DatabaseReference orderrequest;
     Button selectDate, selectTime;
+    float t = 0.0f;
+    public static TextView total;
+    List<CartItems> itemsInCart = new ArrayList<>();
+    CartAdapter adapter;
+    Button placeOrder;
+    List<OrderItem> productList = new ArrayList<>();
+    private FirebaseAuth mAuth;
+    String addr="";
+
 
     public TextView getTotal() {
         return total;
+    }
+
+    public void modifyCartTotal(float f)
+    {
+        t = t -f ;
+        total.setText("₹" +Float.toString(t));
+
     }
 
     public void setTotal(TextView total) {
         this.total = total;
     }
 
-    public TextView total;
-    List<CartItems> itemsInCart = new ArrayList<>();
-    CartAdapter adapter;
-    Button placeOrder;
-    List<OrderItem> productList = new ArrayList<>();
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +86,6 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         selectDate =(Button) findViewById(R.id.selectdate);
         selectTime =(Button) findViewById(R.id.selecttime);
         loadList();
-
-
-
-
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,9 +160,9 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
             }
             if(!selectTime.getText().toString().equals("TIME"))
             {
-                date = selectTime.getText().toString();
+                time = selectTime.getText().toString();
             }
-            o.setServiceTime(date+"-"+time);
+            o.setServiceTime(date+"|"+time);
             o.setUserPhoneNumber(userPhoneNumber);
             Float tot =0.0f;
             for(OrderItem pt : productList)
@@ -161,6 +170,8 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
                 tot += pt.getPrice();
             }
             o.setTotal(tot.toString());
+
+            o.setAddress(addr);
             orderrequest.child(o.getOrderId()).setValue(o);
             new CartDatabase(getBaseContext()).cleanCart();
             Toast.makeText(Cart.this,"Order placed",Toast.LENGTH_LONG).show();
@@ -181,6 +192,27 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         editText.setLayoutParams(lp);
         alertDialog.setView(editText);
 
+        Users u = new Users();
+        List<Users> userDetails = new UserDatabase(this).getUser();
+
+        if(userDetails!= null && !userDetails.isEmpty())
+        {
+
+            u = userDetails.get(0);
+            if(null != u.getNu() && !u.getNu().isEmpty())
+            {
+                editText.setText(u.getNu());
+            }
+            addr= u.getNm()+u.getAddAt()+u.getAddNear()+u.getAddCity();
+        }
+        else
+        {
+            //toast
+            Toast.makeText(Cart.this,"Please add your details",Toast.LENGTH_LONG).show();
+            //send user to user hub
+            Intent i = new Intent(getApplicationContext(),UserHub.class);
+            startActivity(i);
+        }
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -211,7 +243,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         adapter = new CartAdapter(itemsInCart,this);
         recyclerView.setAdapter(adapter);
 
-        float t = 0.0f;
+
         for(CartItems item : itemsInCart)
         {
             OrderItem p = new OrderItem();
