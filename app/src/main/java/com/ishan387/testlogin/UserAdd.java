@@ -240,7 +240,7 @@ public class UserAdd extends AppCompatActivity {
             return false;
         } else if(add3.length()>a3.getCounterMaxLength()){
             a3.setErrorEnabled(true);
-            a3.setError("oh that's too long buddy");
+            a3.setError("oh that's too long..");
             requestFocus(add3);
             return false;
         }

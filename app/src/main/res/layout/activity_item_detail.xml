@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cart"
-        android:src="@drawable/ic_action_cart"
+        android:src="@drawable/addtocart"
         android:layout_marginRight="3dp"
 
         android:elevation="6dp"
@@ -103,20 +103,42 @@
                     android:max="5"
                     android:layout_marginTop="19dp"
                     android:id="@+id/ratngbar" />
-                <TextView
-                    android:layout_height="wrap_content"
-                 android:layout_width="wrap_content"
-                 android:id="@+id/name"
-                 android:layout_marginTop="8dp"
-                 android:padding="12dp"
-                 android:text="ProductName"
-                 android:textSize="20sp"
-                 android:textColor="@color/colorPrimary"
-                 android:textStyle="bold"
-                 >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="6">
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/name"
+                        android:layout_marginTop="8dp"
+                        android:padding="12dp"
+                        android:text="ProductName"
+                        android:textSize="20sp"
+                        android:layout_weight="4"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/itemdetail_price"
+                        android:layout_marginTop="8dp"
+                        android:padding="12dp"
+                        android:text="price"
+                        android:textSize="20sp"
+
+                        android:textStyle="bold"
+                        />
 
 
-             </TextView>
+                </LinearLayout>
+
+
+
+
 
 
 
@@ -146,8 +168,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/reviewlist"></android.support.v7.widget.RecyclerView>
 
-        </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/white"
+                android:id="@+id/adminsection_itemdetail"
+                >
+                <android.support.v7.widget.AppCompatButton
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:id="@+id/adminremoveitem"
+                    android:text="REMOVE ITEM"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@android:color/white"
+                    />
+                <android.support.v7.widget.AppCompatButton
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:text="EDIT ITEM"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/adminedititem"
+                    />
+            </LinearLayout>
+        </LinearLayout>
 
 
 

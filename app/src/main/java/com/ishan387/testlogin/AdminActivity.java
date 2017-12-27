@@ -31,6 +31,10 @@ import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -42,6 +46,9 @@ public class AdminActivity extends AppCompatActivity {
     private EditText itemDescription;
     private EditText itemPrice;
     Button save,upload;
+    boolean isUpdate = false;
+
+    Product productPassed;
 
     Uri filePath;
     byte[] bytearray;
@@ -77,11 +84,29 @@ public class AdminActivity extends AppCompatActivity {
        // FirebaseStorage storage = FirebaseStorage.getInstance();
         //StorageReference storageRef = storage.getReferenceFromUrl("testlogin-6db22.appspot.com");    //change the url according to your firebase app
 
+        if (getIntent() != null) {
+            Bundle b = this.getIntent().getExtras();
+            if (b != null)
+            {
+
+                productPassed = (Product) b.getSerializable("ProductPassed");
+                setViewToEdit(productPassed);
+            }
+
+
+        }
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addItemToDb(view);
+                if(!isUpdate)
+                {
+                    addItemToDb(view);
+                }
+                else
+                {
+                    updateItemToDb(view);
+                }
 
 
             }
@@ -96,6 +121,88 @@ public class AdminActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
             }
         });
+
+
+    }
+
+    private void updateItemToDb(View view) {
+
+        final View v = view;
+
+
+        final String id = productPassed.getId();
+        String[] downloadUrl = new String[3];
+        if(bytearray != null)
+        {
+            final ProgressDialog pd = new ProgressDialog(this);
+            pd.setCanceledOnTouchOutside(false);
+            pd.setMessage("Updating item..");
+            pd.show();
+
+            final StorageReference filePathStorage = storage.child("photos").child(id);
+            if(null != filePathStorage)
+            filePathStorage.delete();
+            UploadTask task = filePathStorage.putBytes(bytearray);
+            task.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * (taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount()));
+                    //pd.setMessage("Adding your item, Please wait..");
+                }
+            });
+
+            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    String urlD =taskSnapshot.getDownloadUrl().toString();
+
+
+                    Map<String,Object> pMap = new HashMap<String,Object>();
+                    pMap.put("price", Float.parseFloat(itemPrice.getText().toString()));
+                    pMap.put("description",itemDescription.getText().toString());
+                    pMap.put("name", itemName.getText().toString());
+                    pMap.put("category",category.getSelectedItem().toString());
+                    pMap.put("imageUrl",urlD);
+                    products.child(id).updateChildren(pMap);
+                    //products.child(id).setValue(product);
+                    pd.dismiss();
+                    Snackbar.make(v, "Product updated", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+
+        }
+
+        else {
+            Map<String,Object> pMap = new HashMap<String,Object>();
+            pMap.put("price", Float.parseFloat(itemPrice.getText().toString()));
+            pMap.put("description",itemDescription.getText().toString());
+            pMap.put("name", itemName.getText().toString());
+            pMap.put("category",category.getSelectedItem().toString());
+
+            products.child(id).updateChildren(pMap);
+
+        }
+    }
+
+    private void setViewToEdit(Product productPassed) {
+        String [] categories = getResources().getStringArray(R.array.type);
+        List<String> listOfCategories = Arrays.asList(categories);
+        int index = listOfCategories.indexOf(productPassed.getCategory());
+        save.setText("Update Item");
+        isUpdate = true;
+        itemName.setText(productPassed.getName());
+        itemPrice.setText(Float.toString(productPassed.getPrice()));
+        itemDescription.setText(productPassed.getDescription());
+        category.setSelection(index);
+        upload.setText("Change Image");
+
 
 
     }
@@ -136,12 +243,14 @@ public class AdminActivity extends AppCompatActivity {
     private void addItemToDb(View view) {
         final View v = view;
 
+
         final String id = products.push().getKey();
          String[] downloadUrl = new String[3];
         if(bytearray != null)
         {
             final ProgressDialog pd = new ProgressDialog(this);
-            pd.setMessage("Adding item");
+            pd.setCanceledOnTouchOutside(false);
+            pd.setMessage("Adding item..");
             pd.show();
 
             final StorageReference filePathStorage = storage.child("photos").child(id);
@@ -150,7 +259,7 @@ public class AdminActivity extends AppCompatActivity {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * (taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount()));
-                    pd.setMessage("Adding item " + progress + "%");
+                    //pd.setMessage("Adding your item, Please wait..");
                 }
             });
 
@@ -160,7 +269,7 @@ public class AdminActivity extends AppCompatActivity {
 
                     String urlD =taskSnapshot.getDownloadUrl().toString();
                     Product product = new Product();
-
+                    product.setId(id);
                     product.setCategory(category.getSelectedItem().toString());
                     product.setPrice(Float.parseFloat(itemPrice.getText().toString()));
                     product.setName(itemName.getText().toString());
@@ -182,6 +291,7 @@ public class AdminActivity extends AppCompatActivity {
 
         else {
             Product product = new Product();
+            product.setId(id);
             product.setCategory(category.getSelectedItem().toString());
             product.setPrice(Float.parseFloat(itemPrice.getText().toString()));
             product.setName(itemName.getText().toString());

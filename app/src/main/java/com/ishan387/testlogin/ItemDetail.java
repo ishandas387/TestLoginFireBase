@@ -1,6 +1,7 @@
 package com.ishan387.testlogin;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -44,7 +45,7 @@ import java.util.List;
 public class ItemDetail extends AppCompatActivity implements RatingDialogListener {
 
 
-    TextView name;
+    TextView name,price;
     ImageView bgi;
     CollapsingToolbarLayout clayout;
     FloatingActionButton fab;
@@ -58,6 +59,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
     private FirebaseAuth mAuth;
     private RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
+    Button adminEdit,adminDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +71,12 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         prod = products.getReference("Products");
         fab = (FloatingActionButton) findViewById(R.id.cart);
         name = (TextView) findViewById(R.id.name);
+        price =(TextView) findViewById(R.id.itemdetail_price);
         bgi = (ImageView) findViewById(R.id.backgroundimage);
         ratingButton = (FloatingActionButton) findViewById(R.id.ratingbutton);
         ratingbar = (RatingBar) findViewById(R.id.ratngbar);
+        adminDelete =(Button) findViewById(R.id.adminremoveitem);
+        adminEdit =(Button) findViewById(R.id.adminedititem);
         user = mAuth.getCurrentUser();
 
         ratingButton.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +121,36 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
                         Toast.LENGTH_SHORT).show();
             }
         });
+        adminDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteItem();
+            }
+        });
+        adminEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editItem(p);
+            }
+        });
+    }
+
+    private void editItem(Product p) {
+
+        Intent i = new Intent();
+        Bundle b = new Bundle();
+        b.putSerializable("ProductPassed", p);
+        i.putExtras(b);
+        i.setClass(this, AdminActivity.class);
+        startActivity(i);
+
+    }
+
+    private void deleteItem() {
+        prod.child(productId).removeValue();
+        Toast.makeText(ItemDetail.this, "Item removed",
+                Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private void showRatingDialogue() {
@@ -142,23 +177,28 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                  p  = dataSnapshot.getValue(Product.class);
-                if(null!= p.getImageUrl() && !p.getImageUrl().isEmpty())
-                Picasso.with(getBaseContext()).load(Uri.parse(p.getImageUrl())).into(bgi);
-                name.setText(p.getCategory());
-                clayout.setTitle(p.getName());
-                List<Review> currentReviewList = p.getReviewList();
-                if(null != currentReviewList && !currentReviewList.isEmpty())
-                {
-                    int sum=0, count=0;
-                    for(Review r : currentReviewList)
-                    {
-                        sum = sum + (int) r.getRating();
-                        count++;
-                    }
-                    float average = sum/count;
-                    ratingbar.setRating(average);
-                    settingListOfReviews(currentReviewList);
-                }
+                 if(null != p)
+                 {
+                     if(null!= p.getImageUrl() && !p.getImageUrl().isEmpty())
+                         Picasso.with(getBaseContext()).load(Uri.parse(p.getImageUrl())).into(bgi);
+                     name.setText(p.getName());
+                     price.setText("₹"+p.getPrice());
+                     clayout.setTitle(p.getCategory());
+                     List<Review> currentReviewList = p.getReviewList();
+                     if(null != currentReviewList && !currentReviewList.isEmpty())
+                     {
+                         int sum=0, count=0;
+                         for(Review r : currentReviewList)
+                         {
+                             sum = sum + (int) r.getRating();
+                             count++;
+                         }
+                         float average = sum/count;
+                         ratingbar.setRating(average);
+                         settingListOfReviews(currentReviewList);
+                     }
+                 }
+
             }
 
             @Override

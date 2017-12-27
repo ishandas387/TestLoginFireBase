@@ -10,6 +10,10 @@
             android:id="@+id/offerzone"
             android:icon="@drawable/offer"
             android:title="Offer Zone" />
+        <item
+            android:id="@+id/gottocart"
+            android:icon="@drawable/ic_action_cart"
+            android:title="Cart" />
 
         <item
             android:id="@+id/nav_admin"

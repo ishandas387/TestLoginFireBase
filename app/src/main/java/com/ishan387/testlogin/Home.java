@@ -66,6 +66,7 @@ public class Home extends AppCompatActivity
 
     SimpleDraweeView draweeView ;
     FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
+    ProgressDialog pd ;
 
     //searchbar
     FirebaseRecyclerAdapter<Product, ProductViewHolder> searchAdapter;
@@ -176,11 +177,11 @@ public class Home extends AppCompatActivity
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        final ProgressDialog pd = new ProgressDialog(this);
+       pd = new ProgressDialog(this);
         pd.setMessage("Getting items");
         pd.show();
         loadRecylerView();
-        pd.hide();
+        //
         materialSearchBar.setLastSuggestions(suggestionList);
         materialSearchBar.addTextChangeListener(new TextWatcher() {
             @Override
@@ -228,6 +229,7 @@ public class Home extends AppCompatActivity
 
             }
         });
+        pd.hide();
 
     }
 
@@ -268,6 +270,8 @@ public class Home extends AppCompatActivity
 
         };
         recyclerView.setAdapter(searchAdapter);
+
+
     }
 
 
@@ -304,12 +308,8 @@ public class Home extends AppCompatActivity
                     }
                 });
 
-                viewHolder.editItem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showAlertDialog();
-                    }
-                });
+
+
             }
         };
         recyclerView.setAdapter(adapter);
@@ -436,7 +436,14 @@ public class Home extends AppCompatActivity
 
         if (id == R.id.offerzone) {
 
-        } else if (id == R.id.nav_slideshow) {
+        }
+        else if(id == R.id.gottocart)
+        {
+            Intent i = new Intent(getApplicationContext(),Cart.class);
+            startActivity(i);
+        }
+
+        else if (id == R.id.nav_slideshow) {
 
             mAuth.signOut();
             Intent i = new Intent(getApplicationContext(),LoginActivity.class);

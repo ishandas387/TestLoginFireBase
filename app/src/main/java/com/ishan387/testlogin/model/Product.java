@@ -1,5 +1,8 @@
 package com.ishan387.testlogin.model;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +10,9 @@ import java.util.List;
  * Created by ishan on 01-11-2017.
  */
 
-public class Product {
+public class Product implements Serializable {
 
-    int id;
+    String reference;
     String name;
     String description;
     String category;
@@ -26,8 +29,8 @@ public class Product {
 
     float price;
 
-    public Product(int id, String name, String description, String category, String imageUrl, float price, List<Review> reviewList) {
-        this.id = id;
+    public Product(String id, String name, String description, String category, String imageUrl, float price, List<Review> reviewList) {
+        this.reference = id;
         this.name = name;
         this.description = description;
         this.category = category;
@@ -49,8 +52,8 @@ public class Product {
     public Product() {
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(String id) {
+        this.reference = id;
     }
 
     public void setName(String name) {
@@ -69,8 +72,8 @@ public class Product {
         this.reviewList = reviewList;
     }
 
-    public int getId() {
-        return id;
+    public String getId() {
+        return reference;
 
     }
 

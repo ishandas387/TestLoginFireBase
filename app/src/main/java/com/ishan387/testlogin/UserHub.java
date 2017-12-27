@@ -1,6 +1,8 @@
 package com.ishan387.testlogin;
 
 import android.content.Intent;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,14 +31,16 @@ import java.util.List;
 
 public class UserHub extends AppCompatActivity {
 
-    TextView username,useremail;
-    Button edit ;
+    TextView username,useremail,userhuaddress;
+    FloatingActionButton edit ;
     private FirebaseAuth mAuth;
     private RecyclerView recyclerView;
     DatabaseReference orders;
     FirebaseUser user;
+    CollapsingToolbarLayout clayout;
     FirebaseRecyclerAdapter<Orders, OrderHistoryViewHolder> adapter;
     MyDailogueFragment fragment = new MyDailogueFragment();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +48,13 @@ public class UserHub extends AppCompatActivity {
         setContentView(R.layout.userhub);
         mAuth = FirebaseAuth.getInstance();
         username = (TextView) findViewById(R.id.username);
+        userhuaddress = (TextView) findViewById(R.id.userhuaddress);
         recyclerView = (RecyclerView) findViewById(R.id.order_history_recycler_view);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setNestedScrollingEnabled(false);
 
         Query filter = null;
         if (mAuth != null) {
@@ -57,7 +63,7 @@ public class UserHub extends AppCompatActivity {
         }
         orders = FirebaseDatabase.getInstance().getReference("Orders");
         filter = orders.orderByChild("userName").equalTo(user.getDisplayName());
-        edit = (Button) findViewById(R.id.editupdate);
+        edit = (FloatingActionButton) findViewById(R.id.editupdate);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +76,14 @@ public class UserHub extends AppCompatActivity {
         if(userDetails!= null && !userDetails.isEmpty())
          u = userDetails.get(0);
         username.setText(u.getNm());
+        userhuaddress.setText(u.getNu()+"\n"+u.getAddAt()+"\n"+u.getAddNear()+"\n"+u.getAddCity());
             loadRecylerView(filter);
+        clayout = (CollapsingToolbarLayout) findViewById(R.id.clayout);
+
+        clayout.setExpandedTitleTextAppearance(R.style.expandclayout);
+        clayout.setCollapsedTitleTextAppearance(R.style.collapsedclayout);
+
+        clayout.setTitle("ORDER HISTORY");
 
     }
 

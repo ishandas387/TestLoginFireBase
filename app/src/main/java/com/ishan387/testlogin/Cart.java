@@ -203,7 +203,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
             {
                 editText.setText(u.getNu());
             }
-            addr= u.getNm()+u.getAddAt()+u.getAddNear()+u.getAddCity();
+            addr= u.getNm()+" "+u.getAddAt()+" "+u.getAddNear()+" "+u.getAddCity();
         }
         else
         {

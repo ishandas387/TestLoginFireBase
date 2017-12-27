@@ -86,11 +86,11 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-       <ImageButton
+      <!-- <ImageButton
            android:layout_width="wrap_content"
            android:layout_height="wrap_content" android:id="@+id/edititem"  android:src="@drawable/delete" android:layout_alignParentTop="true"
            android:layout_alignParentEnd="true" android:alpha="0.5"/>
-
+-->
     <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" android:id="@+id/layoutphoto">
