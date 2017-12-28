@@ -435,6 +435,8 @@ public class Home extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.offerzone) {
+            Intent i = new Intent(getApplicationContext(),OfferManagerment.class);
+            startActivity(i);
 
         }
         else if(id == R.id.gottocart)

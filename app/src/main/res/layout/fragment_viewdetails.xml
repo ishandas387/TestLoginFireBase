@@ -18,7 +18,7 @@
 
         <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="120dp"
+            android:layout_height="70dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:padding="10dp"
@@ -32,8 +32,13 @@
      </ListView>
 
         <TextView
+            android:layout_width="match_parent" android:background="@android:color/black"
+            android:layout_height="wrap_content" android:id="@+id/addrmarker" android:text="Address: " android:textColor="@android:color/white" android:padding="3dp" android:layout_marginLeft="2dp" android:layout_marginBottom="1dp" android:layout_marginTop="2dp" />
+
+
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/address" />
+            android:layout_height="wrap_content" android:id="@+id/address" android:padding="5dp" android:layout_marginLeft="2dp" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"

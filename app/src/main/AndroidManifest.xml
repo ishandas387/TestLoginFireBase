@@ -68,7 +68,7 @@
         <activity android:name=".UserAdd" />
         <activity
             android:name=".OfferManagerment"
-            android:label="@string/title_activity_offer_managerment"
+            android:label="Offer Zone"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddOffer"

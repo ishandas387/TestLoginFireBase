@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -29,7 +30,7 @@ public class MyDailogueFragment extends DialogFragment {
     }
     LinearLayout linearLayout;
     ListView lv;
-    TextView address;
+    TextView address,addrmarker;
     String [] listItems;
     String addr;
 
@@ -57,12 +58,26 @@ public class MyDailogueFragment extends DialogFragment {
         linearLayout = (LinearLayout) dialog.findViewById(R.id.agree);
         lv = (ListView) dialog.findViewById(R.id.listOfitems);
         address = (TextView) dialog.findViewById(R.id.address);
+        addrmarker= (TextView) dialog.findViewById(R.id.addrmarker);
         if(addr != null && !addr.isEmpty())
         {
             address.setText(addr);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, listItems);
+                android.R.layout.simple_list_item_1, listItems){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 0)
+                {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(Color.parseColor("#E0E0E0"));
+                }
+                return view;
+            }
+        };
+
         lv.setAdapter(adapter);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,4 +90,8 @@ public class MyDailogueFragment extends DialogFragment {
         return dialog;
     }
 
+    public void setAddrViewToGone() {
+        addrmarker.setVisibility(View.GONE);
+
+    }
 }

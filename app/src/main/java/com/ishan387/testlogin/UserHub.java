@@ -123,6 +123,8 @@ public class UserHub extends AppCompatActivity {
                                 itemNames.add(oi.getName());
                             }
                             fragment.setListItems(itemNames);
+                            fragment.setAddress(model.getAddress());
+                           // fragment.setAddrViewToGone();
                         }
 
                         fragment.show(getFragmentManager(),"");

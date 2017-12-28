@@ -85,13 +85,24 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         mAuth = FirebaseAuth.getInstance();
         selectDate =(Button) findViewById(R.id.selectdate);
         selectTime =(Button) findViewById(R.id.selecttime);
-        loadList();
+        loadListAndAdapter();
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                // placeorderMethod(editText.getText().toString());
-             showAlertDialog();
+                if(selectDate.getText().toString().equals("DATE"))
+                {
+                    Toast.makeText(Cart.this,"Please select a service date",Toast.LENGTH_LONG).show();
+                }
+                else if(selectTime.getText().toString().equals("TIME"))
+                {
+                    Toast.makeText(Cart.this,"Please select a service time",Toast.LENGTH_LONG).show();
+                } else
+                {
+
+                    showAlertDialog();
+                }
             }
         });
 
@@ -133,12 +144,46 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         });
     }
 
+    private void loadListAndAdapter() {
+        itemsInCart = new CartDatabase(this).getCart();
+        adapter = new CartAdapter(itemsInCart,this);
+        recyclerView.setAdapter(adapter);
+
+
+        for(CartItems item : itemsInCart)
+        {
+            OrderItem p = new OrderItem();
+            p.setPrice(Float.parseFloat(item.getPrice()));
+            p.setName(item.getProductName());
+            // p.setTime(item.getServiceTime());
+            productList.add(p);
+            t += Float.parseFloat(item.getPrice());
+        }
+        Locale local = new Locale("en","IN");
+        NumberFormat n = NumberFormat.getCurrencyInstance(local);
+        total.setText("₹" +Float.toString(t));
+    }
+
     private void placeorderMethod(String userPhoneNumber) {
+
+        productList.clear();
+        itemsInCart.clear();
+        itemsInCart = new CartDatabase(this).getCart();
+        for(CartItems item : itemsInCart)
+        {
+            OrderItem p = new OrderItem();
+            p.setPrice(Float.parseFloat(item.getPrice()));
+            p.setName(item.getProductName());
+            // p.setTime(item.getServiceTime());
+            productList.add(p);
+
+        }
         if (productList.isEmpty())
         {
             Toast.makeText(Cart.this,"Cart is empty",Toast.LENGTH_LONG).show();
 
         }
+
         else
         {
 
@@ -239,23 +284,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
 
     private void loadList() {
 
-        itemsInCart = new CartDatabase(this).getCart();
-        adapter = new CartAdapter(itemsInCart,this);
-        recyclerView.setAdapter(adapter);
 
-
-        for(CartItems item : itemsInCart)
-        {
-            OrderItem p = new OrderItem();
-            p.setPrice(Float.parseFloat(item.getPrice()));
-            p.setName(item.getProductName());
-           // p.setTime(item.getServiceTime());
-            productList.add(p);
-            t += Float.parseFloat(item.getPrice());
-        }
-        Locale local = new Locale("en","IN");
-        NumberFormat n = NumberFormat.getCurrencyInstance(local);
-        total.setText("₹" +Float.toString(t));
     }
 
     @Override
