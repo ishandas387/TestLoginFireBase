@@ -69,6 +69,16 @@ public class CartDatabase extends SQLiteAssetHelper {
         db.execSQL(query);
     }
 
+    public int countOfItem(String itemName)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("SELECT * FROM SBCART WHERE productName= '"+ itemName+"'");
+        Cursor c = db.rawQuery(query, null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
     public void deleteItem(String itemName)
     {
         SQLiteDatabase db = getReadableDatabase();

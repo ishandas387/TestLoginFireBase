@@ -173,16 +173,9 @@
                     app:counterEnabled="true"
                     app:counterMaxLength="6"
 
-                    >
+                    />
 
-                    <EditText
-                        android:id="@+id/input_add4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:hint="Zip Code"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+
             </LinearLayout>
         </LinearLayout>
 

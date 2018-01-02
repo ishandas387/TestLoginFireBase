@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 
 import com.ishan387.testlogin.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,8 +39,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
     public void onBindViewHolder(ReviewViewHolder holder, int position) {
 
             holder.reviewRate.setText(Integer.toString((int)lisData.get(position).getRating()));
-            if(null != lisData.get(position).getDate())
-            holder.reviewDate.setText(lisData.get(position).getDate().toString());
+        Date date = new Date();
+        if(null != lisData.get(position).getDate())
+            date = lisData.get(position).getDate();
+            SimpleDateFormat simpleDateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a ");
+            holder.reviewDate.setText(simpleDateformat.format(date));
             holder.reviewerEmail.setText(lisData.get(position).getUserEmail());
             holder.reviewDescription.setText(lisData.get(position).getReview());
             holder.reviewerName.setText(lisData.get(position).getUserName());

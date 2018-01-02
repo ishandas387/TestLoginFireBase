@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,7 @@ public class AdminMenu extends AppCompatActivity {
     //private final Handler mHideHandler = new Handler();
     //private View mContentView;
     Button viewOrders,addItem,offer;
+    CardView addItemCard, viewordersCard, offerZcard;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -95,34 +97,57 @@ public class AdminMenu extends AppCompatActivity {
         mVisible = true;
         //mControlsView = findViewById(R.id.fullscreen_content_controls);
        // mContentView = findViewById(R.id.fullscreen_content);
-
-        addItem =(Button) findViewById(R.id.additem);
+        addItemCard = (CardView) findViewById(R.id.additemcard);
+        viewordersCard = (CardView) findViewById(R.id.viewordercard);
+        offerZcard = (CardView) findViewById(R.id.offerz);
+        /*addItem =(Button) findViewById(R.id.additem);
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),AdminActivity.class);
                 startActivity(i);
             }
+        });*/
+        addItemCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),AdminActivity.class);
+                startActivity(i);
+            }
         });
-
-        viewOrders = (Button) findViewById(R.id.vieworders);
-        viewOrders.setOnClickListener(new View.OnClickListener() {
+        viewordersCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),AdminAcceptReject.class);
                 startActivity(i);
             }
         });
-
-
-        offer = (Button) findViewById(R.id.offer);
-        offer.setOnClickListener(new View.OnClickListener() {
+        offerZcard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),OfferManagerment.class);
                 startActivity(i);
             }
         });
+
+        /*viewOrders = (Button) findViewById(R.id.vieworders);
+        viewOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),AdminAcceptReject.class);
+                startActivity(i);
+            }
+        });*/
+
+
+        /*offer = (Button) findViewById(R.id.offer);
+        offer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),OfferManagerment.class);
+                startActivity(i);
+            }
+        });*/
 
         // Set up the user interaction to manually show or hide the system UI.
       /*  mContentView.setOnClickListener(new View.OnClickListener() {

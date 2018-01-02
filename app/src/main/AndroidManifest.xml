@@ -16,6 +16,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -73,6 +84,14 @@
         <activity
             android:name=".AddOffer"
             android:label="@string/title_activity_add_offer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SelectCategory"
+            android:label="@string/title_activity_select_category"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ProductActivity"
+            android:label="@string/title_activity_product"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

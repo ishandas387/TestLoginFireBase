@@ -2,17 +2,22 @@ package com.ishan387.testlogin;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,12 +29,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 
+import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
 import com.ishan387.testlogin.model.CartItems;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.Review;
 import com.ishan387.testlogin.model.ReviewAdapter;
+import com.ishan387.testlogin.model.UserDetails;
+import com.ishan387.testlogin.model.Users;
 import com.squareup.picasso.Picasso;
 
 import com.stepstone.apprating.AppRatingDialog;
@@ -60,6 +70,8 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
     private RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     Button adminEdit,adminDelete;
+    UserDetails userDetail;
+    DataSnapshot users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,17 +120,34 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
             getProductDetails();
 
         }
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        boolean isAdmin = pref.getBoolean("isAdmin",false);
+        if(!isAdmin)
+        {
+            LinearLayout adminLayout = (LinearLayout)findViewById(R.id.adminsection_itemdetail);
+            adminLayout.setVisibility(View.GONE);
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String serviceDate = "";
                 String serviceTime = "";
+                int count = new CartDatabase(getBaseContext()).countOfItem(p.getName());
+                if(count ==0)
 
-                CartItems cartItem = new CartItems(productId, p.getName(), Float.toString(p.getPrice()), serviceDate + "/" + serviceTime);
-                new CartDatabase(getBaseContext()).addToCart(cartItem);
-                Toast.makeText(ItemDetail.this, "Added to cart",
-                        Toast.LENGTH_SHORT).show();
+                {
+                    CartItems cartItem = new CartItems(productId, p.getName(), Float.toString(p.getPrice()), serviceDate + "/" + serviceTime);
+                    new CartDatabase(getBaseContext()).addToCart(cartItem);
+                    Toast.makeText(ItemDetail.this, "Added to cart",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(ItemDetail.this, "Already in your cart",
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         adminDelete.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +176,13 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
     }
 
     private void deleteItem() {
+        //delete from db
         prod.child(productId).removeValue();
+        //delete image from storage
+        StorageReference storage = FirebaseStorage.getInstance().getReference();
+        final StorageReference filePathStorage = storage.child("photos").child(productId);
+        if(null != filePathStorage)
+            filePathStorage.delete();
         Toast.makeText(ItemDetail.this, "Item removed",
                 Toast.LENGTH_SHORT).show();
         finish();
@@ -208,6 +243,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         });
     }
 
+
     private void settingListOfReviews(List<Review> currentReviewList) {
 
         ReviewAdapter adapter = new ReviewAdapter(currentReviewList, this);
@@ -224,15 +260,27 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         r.setDate(new Date());
         if(null != user)
         {
-            if(!user.getDisplayName().isEmpty())
+            if(null != user.getDisplayName() && !user.getDisplayName().isEmpty())
             {
 
             r.setUserName(user.getDisplayName());
             }
             else
             {
-                if(!user.getEmail().isEmpty())
-                r.setUserName(user.getEmail());
+                List<Users> userDetails = new UserDatabase(this).getUser();
+
+                if(userDetails!= null && !userDetails.isEmpty())
+                {
+                    r.setUserName(userDetails.get(0).getNm());
+                }
+                else {
+
+                    if(!user.getEmail().isEmpty()) {
+                        r.setUserName(user.getEmail());
+
+                    }
+
+                }
             }
 
             if(!user.getEmail().isEmpty())
@@ -269,7 +317,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         boolean flag  =false;
         for( Review review : reviewList)
         {
-            if (review.getUserEmail().equalsIgnoreCase(r.getUserEmail()) || review.getUserName().equalsIgnoreCase(r.getUserName()))
+            if (review.getUserEmail().equalsIgnoreCase(r.getUserEmail()) )
             {
                 review.setRating(r.getRating());
                 review.setReview(r.getReview());

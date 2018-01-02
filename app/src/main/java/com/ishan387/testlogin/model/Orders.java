@@ -18,7 +18,31 @@ public class Orders {
     String serviceTime;
     String total;
     int status;
+
     String address;
+    String userToken;
+    public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<OrderItem> products, String serviceTime, String total, int status, String address, String userToken, String userPhoneNumber) {
+        this.timeStamp = timeStamp;
+        this.orderId = orderId;
+        this.productId = productId;
+        this.userName = userName;
+        this.uid = uid;
+        this.products = products;
+        this.serviceTime = serviceTime;
+        this.total = total;
+        this.status = status;
+        this.address = address;
+        this.userToken = userToken;
+        this.userPhoneNumber = userPhoneNumber;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
 
     public String getAddress() {
         return address;
@@ -41,7 +65,6 @@ public class Orders {
         this.address = address;
         this.userPhoneNumber = userPhoneNumber;
     }
-
 
     public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<OrderItem> products, String serviceTime, String total, int status, String userPhoneNumber) {
         this.timeStamp = timeStamp;

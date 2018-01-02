@@ -152,4 +152,6 @@
     <string name="title_activity_admin_accept_reject">Process orders</string>
     <string name="title_activity_offer_managerment">OfferManagerment</string>
     <string name="title_activity_add_offer">AddOffer</string>
+    <string name="title_activity_select_category">SelectCategory</string>
+    <string name="title_activity_product">ProductActivity</string>
 </resources>

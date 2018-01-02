@@ -1,6 +1,7 @@
 package com.ishan387.testlogin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 import com.ishan387.testlogin.model.CartItems;
 import com.ishan387.testlogin.model.OfferZoneViewHolder;
@@ -32,6 +34,7 @@ public class OfferManagerment extends AppCompatActivity {
     private RecyclerView recyclerView;
     DatabaseReference offers;
     FirebaseUser user;
+    boolean isAdmin = false;
     FirebaseRecyclerAdapter<Offers, OfferZoneViewHolder> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class OfferManagerment extends AppCompatActivity {
 
         offers = FirebaseDatabase.getInstance().getReference("Offers");
 
-        loadRecylerView();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.offerznadd);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +63,12 @@ public class OfferManagerment extends AppCompatActivity {
 
             }
         });
+
+        //Add to Activity
+        FirebaseMessaging.getInstance().subscribeToTopic("offers");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+         isAdmin = pref.getBoolean("isAdmin",false);
+        loadRecylerView();
 
     }
 
@@ -72,6 +81,11 @@ public class OfferManagerment extends AppCompatActivity {
                 viewHolder.offerznid.setText(model.getOfferId());
                 viewHolder.offerznname.setText(model.getOfferName());
                 viewHolder.offerznprice.setText(model.getOfferPrice());
+                if(!isAdmin)
+                {
+                    viewHolder.delete.setVisibility(View.GONE);
+                }
+
                 viewHolder.delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

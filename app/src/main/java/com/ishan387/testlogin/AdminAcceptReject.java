@@ -1,15 +1,23 @@
 package com.ishan387.testlogin;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +37,10 @@ import com.ishan387.testlogin.model.Orders;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class AdminAcceptReject extends AppCompatActivity {
@@ -140,8 +151,25 @@ public class AdminAcceptReject extends AppCompatActivity {
                 viewHolder.accept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        model.setStatus(1);
-                        orders.child(model.getOrderId()).setValue(model);
+                        if(model.getStatus()==1 )
+                        {
+                            Toast.makeText(AdminAcceptReject.this, "It's already confirmed",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if(model.getStatus()==2)
+                        {
+                            Toast.makeText(AdminAcceptReject.this, "It's already rejected",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                        else
+                        {
+                            model.setStatus(1);
+                            orders.child(model.getOrderId()).setValue(model);
+                            showAlertDialogueForCal(model);
+                        }
+
                         //toast
                     }
                 });
@@ -149,8 +177,23 @@ public class AdminAcceptReject extends AppCompatActivity {
                 viewHolder.reject.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        model.setStatus(2);
-                        orders.child(model.getOrderId()).setValue(model);
+                        if(model.getStatus()==2)
+                        {
+                            Toast.makeText(AdminAcceptReject.this, "It's already rejected",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if (model.getStatus() ==1)
+                        {
+                            Toast.makeText(AdminAcceptReject.this, "It's already confirmed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+
+                            model.setStatus(2);
+                            orders.child(model.getOrderId()).setValue(model);
+                        }
                         //toast
                     }
                 });
@@ -180,5 +223,83 @@ public class AdminAcceptReject extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
     }
+
+    private void showAlertDialogueForCal(final Orders model) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(AdminAcceptReject.this);
+        alertDialog.setTitle("Appointment Reminder");
+        alertDialog.setMessage("Would you like to add this to your calendar?");
+
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent calIntent = new Intent(Intent.ACTION_INSERT);
+                calIntent.setType("vnd.android.cursor.item/event");
+                calIntent.putExtra(CalendarContract.Events.TITLE, "Sri's Beauty appointment - "+model.getOrderId()+":"+model.getUserName()+":"+model.getUserPhoneNumber());
+                calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, model.getAddress());
+                calIntent.putExtra(CalendarContract.Events.DESCRIPTION, model.getServiceTime()+"--Bill: "+model.getTotal());
+
+                Calendar calendar = Calendar.getInstance();
+                String arry [] = model.getServiceTime().split("-");
+                int month = getMonthInt(arry[0]);
+                String arry2[] = arry[1].split(" @ ");
+                int day = Integer.parseInt(arry2[0]);
+                String arry3[] = arry2[1].split(":");
+                int hour = Integer.parseInt(arry3[0]);
+                int min = Integer.parseInt(arry3[1]);
+                GregorianCalendar calDate = new GregorianCalendar(calendar.get(Calendar.YEAR), month, day,hour,min);
+
+                calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                        calDate.getTimeInMillis());
+                calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                        calDate.getTimeInMillis());
+
+                startActivity(calIntent);
+
+            }
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private int getMonthInt(String s) {
+        switch(s)
+        {
+            case "Jan":
+               return 0;
+            case "Feb":
+                return 1;
+            case "Mar":
+                return 2;
+            case "Apr":
+                return 3;
+            case "May":
+                return 4;
+            case "Jun":
+                return 5;
+            case "Jul":
+                return 6;
+            case "Aug":
+                return 7;
+            case "Sep":
+                return 8;
+            case "Oct":
+                return 9;
+            case "Nov":
+                return 10;
+            case "Dec":
+                return 11;
+        }
+
+        return 0;
+
+    }
+
 
 }

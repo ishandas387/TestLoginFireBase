@@ -44,13 +44,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>
                 CartItems theRemovedItem = lisData.get(position);
                 // remove your item from data base
 
-               ;
+
                 float newTotal =  Float.parseFloat(Cart.total.getText().toString().replace("₹","")) - Float.parseFloat(lisData.get(position).getPrice());
 
                 new CartDatabase(v.getContext()).deleteItem(theRemovedItem.getProductName());
                 lisData.remove(position);  // remove the item from list
                 notifyItemRemoved(position);
-                Cart.total.setText(Float.toString(newTotal));
+                Cart.total.setText("₹"+Float.toString(newTotal));
 
               /*t.setText(getNewTotal(priceOfItem,c.total.getText().toString()));
                 c.setTotal(t);*/

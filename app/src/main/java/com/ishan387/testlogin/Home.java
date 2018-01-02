@@ -1,12 +1,18 @@
 package com.ishan387.testlogin;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,358 +45,169 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ishan387.testlogin.model.CategorySelectAdapter;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.ProductViewHolder;
+import com.ishan387.testlogin.model.Review;
+import com.ishan387.testlogin.model.UserDetails;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+            private NavigationView navigationView;
+            private DrawerLayout drawer;
+            private View navHeader;
+            private ImageView imgProfile;
+            TextView username,useremail;
+            private FirebaseAuth mAuth;
+            private RecyclerView recyclerView;
+            private ProductAdapter mAdapter;
+            String url;
+            StorageReference storage;
+            UserDetails userDetail ;
+            DatabaseReference users;
+            boolean isAdmin =false;
 
-    private NavigationView navigationView;
-    private DrawerLayout drawer;
-    private View navHeader;
-    private ImageView imgProfile;
-    TextView username,useremail;
-    private FirebaseAuth mAuth;
-    private RecyclerView recyclerView;
-    private ProductAdapter mAdapter;
-    String url;
-    StorageReference storage;
 
-
-    DatabaseReference products;
-
-    SimpleDraweeView draweeView ;
-    FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
-    ProgressDialog pd ;
-
-    //searchbar
-    FirebaseRecyclerAdapter<Product, ProductViewHolder> searchAdapter;
-    List<String> suggestionList = new ArrayList<>();
-    MaterialSearchBar materialSearchBar;
-
-   /* private ImageView imgNavHeaderBg, imgProfile;
-    private TextView txtName, txtWebsite;*/
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mAuth = FirebaseAuth.getInstance();
-        products = FirebaseDatabase.getInstance().getReference("Products");
-        storage = FirebaseStorage.getInstance().getReference();
-        // Navigation view header
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        navHeader = navigationView.getHeaderView(0);
-        // txtName = (TextView) navHeader.findViewById(R.id.name);
-        //txtWebsite = (TextView) navHeader.findViewById(R.id.website);
-        //imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
-        imgProfile = (ImageView) navHeader.findViewById(R.id.imageprofile);
-       // SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.imphoto);
-
-        username =(TextView) navHeader.findViewById(R.id.name);
-        useremail = (TextView) navHeader.findViewById(R.id.useremail);
-        materialSearchBar =(MaterialSearchBar) findViewById(R.id.searchbar);
-        materialSearchBar.setSpeechMode(false);
-
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                url= null;
-
-            }
-            else {
-                url= extras.getString("userphotourl");
-
-            }
-        } else {
-            url= (String) savedInstanceState.getSerializable("userphotourl");
-
-        }
-       // String url = getIntent().getStringExtra("userphotourl");
-        loadNavHeader(url,mAuth);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+            SimpleDraweeView draweeView ;
+            FirebaseRecyclerAdapter<Product, ProductViewHolder> adapter;
+            ProgressDialog pd ;
             @Override
-            public void onClick(View view) {
-               Intent cartIntent = new Intent(Home.this,Cart.class);
-               startActivity(cartIntent);
-            }
-        });
+            protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_home);
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+                mAuth = FirebaseAuth.getInstance();
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        final List<Product> pList = new ArrayList<>();
-        products.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-             /*   Iterable<Product> x = dataSnapshot.getValue();
-                for(DataSnapshot p :x)
-                {
-                    String s1 = p.getValue(String.class);
-                    Log.i("product",  s1);
-                  //  pList.add(pd);
+                navHeader = navigationView.getHeaderView(0);
+                imgProfile = (ImageView) navHeader.findViewById(R.id.imageprofile);
+                // SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.imphoto);
 
-                }*/
-            }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                username =(TextView) navHeader.findViewById(R.id.name);
+                useremail = (TextView) navHeader.findViewById(R.id.useremail);
+                recyclerView =(RecyclerView) findViewById(R.id.categoryselect);
+                recyclerView.setHasFixedSize(true);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(layoutManager);
 
-            }
+                String [] categories = getResources().getStringArray(R.array.type);
+                List<String> listOfCategories = Arrays.asList(categories);
+                recyclerView.setAdapter( new CategorySelectAdapter(listOfCategories, this,isAdmin) );
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if (savedInstanceState == null) {
+                    Bundle extras = getIntent().getExtras();
+                    if(extras == null) {
+                        url= null;
 
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        mAdapter = new ProductAdapter(pList);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                mLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-       pd = new ProgressDialog(this);
-        pd.setMessage("Getting items");
-        pd.show();
-        loadRecylerView();
-        //
-        materialSearchBar.setLastSuggestions(suggestionList);
-        materialSearchBar.addTextChangeListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                List<String> suggest = new ArrayList<>();
-                for(String search :suggestionList)
-                {
-                    if(search.toLowerCase().contains(materialSearchBar.getText().toLowerCase()))
-                    {
-                        suggest.add(search);
                     }
-                }
-                materialSearchBar.setLastSuggestions(suggest);
+                    else {
+                        url= extras.getString("userphotourl");
 
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
-            @Override
-            public void onSearchStateChanged(boolean enabled) {
-
-                if(!enabled)
-                {
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onSearchConfirmed(CharSequence text) {
-                    startSearch(text);
-            }
-
-            @Override
-            public void onButtonClicked(int buttonCode) {
-
-            }
-        });
-        pd.hide();
-
-    }
-
-    private void startSearch(CharSequence text) {
-        searchAdapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products.orderByChild("name").equalTo(text.toString())) {
-            @Override
-            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
-
-                viewHolder.category.setText(model.getCategory());
-                viewHolder.price.setText(Float.toString(model.getPrice()));
-                viewHolder.title.setText(model.getName());
-                suggestionList.add(model.getName());
-                if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
-                {
-                    // Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
-                    // Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
-                    Uri uri = Uri.parse(model.getImageUrl());
-                    if(null!= uri) {
-                        Glide.with(getBaseContext()).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.bgi);
-                        // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
                     }
-                }
+                } else {
+                    url= (String) savedInstanceState.getSerializable("userphotourl");
 
-                final Product m = model;
-                viewHolder.setItemClickListener(new onClickInterface() {
+                }
+                // String url = getIntent().getStringExtra("userphotourl");
+                loadNavHeader(url,mAuth);
+
+
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                fab.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(Home.this, m.getName(),
-                                Toast.LENGTH_SHORT).show();
-
-                        Intent i = new Intent(Home.this,ItemDetail.class);
-                        i.putExtra("productId",searchAdapter.getRef(position).getKey());
-                        startActivity(i);
-                    }
-                });
-            }
-
-
-        };
-        recyclerView.setAdapter(searchAdapter);
-
-
-    }
-
-
-    private void loadRecylerView() {
-        adapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products) {
-            @Override
-            protected void populateViewHolder(final ProductViewHolder viewHolder, Product model, int position) {
-
-                viewHolder.category.setText(model.getCategory());
-                viewHolder.price.setText("₹" +Float.toString(model.getPrice()));
-                viewHolder.title.setText(model.getName());
-                suggestionList.add(model.getName());
-                if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
-                {
-                   // Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
-                   // Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
-                    Uri uri = Uri.parse(model.getImageUrl());
-                    if(null!= uri) {
-                        Glide.with(getBaseContext()).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.bgi);
-                       // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
-                    }
-                }
-
-               final Product m = model;
-                viewHolder.setItemClickListener(new onClickInterface() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(Home.this, m.getName(),
-                                Toast.LENGTH_SHORT).show();
-
-                        Intent i = new Intent(Home.this,ItemDetail.class);
-                        i.putExtra("productId",adapter.getRef(position).getKey());
-                        startActivity(i);
+                    public void onClick(View view) {
+                        Intent cartIntent = new Intent(Home.this,Cart.class);
+                        startActivity(cartIntent);
                     }
                 });
 
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.setDrawerListener(toggle);
+                toggle.syncState();
+                users = FirebaseDatabase.getInstance().getReference("Users");
+                //set up admin menu;
+                setUpAdmin();
 
-
-            }
-        };
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void showAlertDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
-        alertDialog.setTitle("Would like to..");
-        final int i;
-        final Button delete = new Button(Home.this);
-        final Button edit = new Button(Home.this);
-        delete.setText("Delete");
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Home.this, "pela",
-                        Toast.LENGTH_SHORT).show();
-                    //i = 1;
-            }
-        });
-        delete.setText("Edit");
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Home.this, "edit",
-                        Toast.LENGTH_SHORT).show();
+                LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver,
+                        new IntentFilter("tokenReceiver"));
 
             }
-        });
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-        delete.setLayoutParams(lp);
 
-        edit.setLayoutParams(lp);
-        alertDialog.setView(delete);
+    private void setUpAdmin() {
 
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              /*  if(null != editText.getText() && !editText.getText().toString().isEmpty())
+
+                final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                Log.d("",mAuth.getCurrentUser().getUid().toString());
+                if(null!= mAuth.getCurrentUser())
                 {
-                    placeorderMethod(editText.getText().toString());
+                    users.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            userDetail= dataSnapshot.getValue(UserDetails.class);
+                            if(null != userDetail )
+
+                            {
+                                SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = pref.edit();
+                                Menu nav_Menu = navigationView.getMenu();
+                                if(!userDetail.isAdminstrator())
+                                {
+
+                                    nav_Menu.findItem(R.id.nav_admin).setVisible(false);
+                                }
+                                else
+                                {
+                                    nav_Menu.findItem(R.id.nav_admin).setVisible(true);
+                                }
+                                editor.putBoolean("isAdmin", userDetail.isAdminstrator());
+                                editor.commit();
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
-                else
-                {
-                    showAlertDialog();
-                }*/
-            }
-        });
 
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
 
-        alertDialog.show();
     }
 
-    private void loadNavHeader(String url, FirebaseAuth mAuth) {
-        // Loading profile image
-        if(null != url && !url.isEmpty())
-        {
-
-            Glide.with(this).load(url)
-                    .crossFade()
-                    .thumbnail(0.75f)
-                    .bitmapTransform(new CircleTransform(this))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgProfile);
-        }
-        else
-        {
-            imgProfile.setBackgroundResource(R.mipmap.ic_launcher);
+    BroadcastReceiver tokenReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String token = intent.getStringExtra("token");
+            if(token != null)
+            {
+                Map<String,Object> pMap = new HashMap<String,Object>();
+                pMap.put("key", token);
+                users.child(mAuth.getCurrentUser().getUid()).updateChildren(pMap);
+                //send token to your server or what you want to do
+            }
 
         }
-       username.setText( mAuth.getCurrentUser().getDisplayName());
-       useremail.setText(mAuth.getCurrentUser().getEmail());
-    }
-
+    };
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -469,6 +287,15 @@ public class Home extends AppCompatActivity
             }
 
         } else if (id == R.id.nav_send) {
+            String url = "http://www.facebook.com";
+
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+           /* Intent i=  getOpenFacebookIntent(
+                    this
+            );*/
+
 
         }
         else if (id ==R.id.category)
@@ -481,4 +308,307 @@ public class Home extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
+
+
+    //searchbar
+  /*  FirebaseRecyclerAdapter<Product, ProductViewHolder> searchAdapter;
+    List<String> suggestionList = new ArrayList<>();
+    MaterialSearchBar materialSearchBar;*/
+
+   /* private ImageView imgNavHeaderBg, imgProfile;
+    private TextView txtName, txtWebsite;*/
+   /* @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        products = FirebaseDatabase.getInstance().getReference("Products");
+        storage = FirebaseStorage.getInstance().getReference();
+     */   // Navigation view header
+
+        // txtName = (TextView) navHeader.findViewById(R.id.name);
+        //txtWebsite = (TextView) navHeader.findViewById(R.id.website);
+        //imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
+
+        /**
+         * Setting up category list
+         */
+
+
+
+   /*     materialSearchBar =(MaterialSearchBar) findViewById(R.id.searchbar);
+        materialSearchBar.setSpeechMode(false);
+*/
+
+
+
+      /*  recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        final List<Product> pList = new ArrayList<>();*/
+   /*     products.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+             *//*   Iterable<Product> x = dataSnapshot.getValue();
+                for(DataSnapshot p :x)
+                {
+                    String s1 = p.getValue(String.class);
+                    Log.i("product",  s1);
+                  //  pList.add(pd);
+
+                }*//*
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
+
+      //  mAdapter = new ProductAdapter(pList);
+      /*  LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                mLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+       pd = new ProgressDialog(this);
+        pd.setMessage("Getting items");
+        pd.show();
+        loadRecylerView();*/
+        //
+      /*  materialSearchBar.setLastSuggestions(suggestionList);*/
+     /*   materialSearchBar.addTextChangeListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                List<String> suggest = new ArrayList<>();
+                for(String search :suggestionList)
+                {
+                    if(search.toLowerCase().contains(materialSearchBar.getText().toLowerCase()))
+                    {
+                        suggest.add(search);
+                    }
+                }
+                materialSearchBar.setLastSuggestions(suggest);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+*/
+    /*    materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
+            @Override
+            public void onSearchStateChanged(boolean enabled) {
+
+                if(!enabled)
+                {
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onSearchConfirmed(CharSequence text) {
+                    startSearch(text);
+            }
+
+            @Override
+            public void onButtonClicked(int buttonCode) {
+
+            }
+        });
+        pd.hide();
+
+    }*/
+
+   /* private void startSearch(CharSequence text) {
+        searchAdapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products.orderByChild("name").equalTo(text.toString())) {
+            @Override
+            protected void populateViewHolder(ProductViewHolder viewHolder, Product model, int position) {
+
+                viewHolder.category.setText(model.getCategory());
+                viewHolder.price.setText(Float.toString(model.getPrice()));
+                viewHolder.title.setText(model.getName());
+                suggestionList.add(model.getName());
+                if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
+                {
+                    // Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
+                    // Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
+                    Uri uri = Uri.parse(model.getImageUrl());
+                    if(null!= uri) {
+                        Glide.with(getBaseContext()).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.bgi);
+                        // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
+                    }
+                }
+
+                final Product m = model;
+                viewHolder.setItemClickListener(new onClickInterface() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Toast.makeText(Home.this, m.getName(),
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent i = new Intent(Home.this,ItemDetail.class);
+                        i.putExtra("productId",searchAdapter.getRef(position).getKey());
+                        startActivity(i);
+                    }
+                });
+            }
+
+
+        };
+        recyclerView.setAdapter(searchAdapter);
+
+
+    }
+*/
+
+  /*  private void loadRecylerView() {
+        adapter = new FirebaseRecyclerAdapter<Product, ProductViewHolder>(Product.class,R.layout.productlistrow,ProductViewHolder.class,products) {
+            @Override
+            protected void populateViewHolder(final ProductViewHolder viewHolder, Product model, int position) {
+
+                viewHolder.category.setText(model.getCategory());
+                viewHolder.price.setText("₹" +Float.toString(model.getPrice()));
+                viewHolder.title.setText(model.getName());
+                suggestionList.add(model.getName());
+                if(null != model.getImageUrl() && !model.getImageUrl().isEmpty())
+                {
+                   // Picasso.with(getBaseContext()).cancelRequest(viewHolder.bgi);
+                   // Picasso.with(getBaseContext()).load(Uri.parse(model.getImageUrl())).into(viewHolder.bgi);
+                    Uri uri = Uri.parse(model.getImageUrl());
+                    if(null!= uri) {
+                        Glide.with(getBaseContext()).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.bgi);
+                       // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
+                    }
+                }
+
+               final Product m = model;
+                viewHolder.setItemClickListener(new onClickInterface() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Toast.makeText(Home.this, m.getName(),
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent i = new Intent(Home.this,ItemDetail.class);
+                        i.putExtra("productId",adapter.getRef(position).getKey());
+                        startActivity(i);
+                    }
+                });
+
+
+
+            }
+        };
+        recyclerView.setAdapter(adapter);
+    }
+*/
+    private void showAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
+        alertDialog.setTitle("Would like to..");
+        final int i;
+        final Button delete = new Button(Home.this);
+        final Button edit = new Button(Home.this);
+        delete.setText("Delete");
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Home.this, "pela",
+                        Toast.LENGTH_SHORT).show();
+                    //i = 1;
+            }
+        });
+        delete.setText("Edit");
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Home.this, "edit",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        delete.setLayoutParams(lp);
+
+        edit.setLayoutParams(lp);
+        alertDialog.setView(delete);
+
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              /*  if(null != editText.getText() && !editText.getText().toString().isEmpty())
+                {
+                    placeorderMethod(editText.getText().toString());
+                }
+                else
+                {
+                    showAlertDialog();
+                }*/
+            }
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void loadNavHeader(String url, FirebaseAuth mAuth) {
+        // Loading profile image
+        if(null != url && !url.isEmpty())
+        {
+
+            Glide.with(this).load(url)
+                    .crossFade()
+                    .thumbnail(0.75f)
+                    .bitmapTransform(new CircleTransform(this))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgProfile);
+        }
+        else
+        {
+            imgProfile.setBackgroundResource(R.mipmap.ic_launcher);
+
+        }
+       username.setText( mAuth.getCurrentUser().getDisplayName());
+       useremail.setText(mAuth.getCurrentUser().getEmail());
+    }
+
+
+   /* public static Intent getOpenFacebookIntent(Context context) {
+
+        try {
+            context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/<id_here>"));
+        } catch (Exception e) {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/<user_name_here>"));
+        }
+    }*/
 }

@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
 import com.ishan387.testlogin.model.CartItems;
@@ -24,6 +26,7 @@ public class UserAdd extends AppCompatActivity {
     EditText user_name,phone_no,mail_id,add1,add2,add3;
 
     TextInputLayout name,phone,mail,a1,a2,a3,a4;
+    private FirebaseAuth mAuth;
 
     Button adduser,skip;
    // UserDBHandler db;
@@ -36,6 +39,8 @@ public class UserAdd extends AppCompatActivity {
         skip =(Button) findViewById(R.id.skip);
        // db = new UserDBHandler(this);
 
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
         user_name  = (EditText) findViewById(R.id.input_name);
         phone_no  = (EditText) findViewById(R.id.input_phone);
         mail_id  = (EditText) findViewById(R.id.input_email);
@@ -43,6 +48,10 @@ public class UserAdd extends AppCompatActivity {
         add2  = (EditText) findViewById(R.id.input_add2);
         add3  = (EditText) findViewById(R.id.input_add3);
        // pincode  = (EditText) findViewById(R.id.input_add4);
+        if(null != user && !user.getEmail().isEmpty())
+        {
+            mail_id.setText(user.getEmail());
+        }
 
         name = (TextInputLayout) findViewById(R.id.input_layout_name);
         phone= (TextInputLayout) findViewById(R.id.input_layout_phone);

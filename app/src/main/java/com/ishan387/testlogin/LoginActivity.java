@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ishan387.testlogin.model.UserDetails;
 
 public class LoginActivity extends AppCompatActivity implements
@@ -160,9 +161,9 @@ public class LoginActivity extends AppCompatActivity implements
                             Toast.makeText(LoginActivity.this, "Verification email sent to your mail id",
                                     Toast.LENGTH_LONG  ).show();
                             sendEmailVerification();
-                            Intent i = getIntent();
+                           /* Intent i = getIntent();
                             finish();
-                            startActivity(i);
+                            startActivity(i);*/
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -361,17 +362,21 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void adduserToUserTable(final FirebaseUser user) {
-        users.orderByChild("uId").addValueEventListener(new ValueEventListener() {
+
+        users.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot!=null && dataSnapshot.getChildren()!=null &&
                         dataSnapshot.getChildren().iterator().hasNext()){
                    Log.d("user","user exists in table");
                 }else {
-
-                    String id = users.push().getKey();
-                    UserDetails userDetails = new UserDetails(id,user.getEmail(),false,user.getDisplayName(),user.getUid());
-                    users.child(id).setValue(userDetails);
+                    UserDetails userDetails = new UserDetails(user.getEmail(),false,user.getDisplayName(),user.getUid(), FirebaseInstanceId.getInstance().getToken());
+                    if(userDetails.getUserName() == null)
+                    {
+                        userDetails.setUserName(userDetails.getUserEmail().split("@")[0]);
+                    }
+                    userDetails.setKey(FirebaseInstanceId.getInstance().getToken()  );
+                    users.child(user.getUid()).setValue(userDetails);
                 }
             }
 

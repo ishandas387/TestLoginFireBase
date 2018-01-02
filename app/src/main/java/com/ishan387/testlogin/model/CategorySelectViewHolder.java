@@ -9,26 +9,23 @@ import com.ishan387.testlogin.R;
 import com.ishan387.testlogin.onClickInterface;
 
 /**
- * Created by ishan on 07-12-2017.
+ * Created by ishan on 01-01-2018.
  */
 
-public class OrderHistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class CategorySelectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView orderId, orderPrice, orderTime,status;
-    public Button addToCal;
+    public TextView categoryName;
+
 
     public void setItemClickListener(onClickInterface itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
     private onClickInterface itemClickListener;
-    public OrderHistoryViewHolder(View itemView) {
+    public CategorySelectViewHolder(View itemView) {
         super(itemView);
-        orderId = (TextView) itemView.findViewById(R.id.orderid);
-        orderPrice = (TextView) itemView.findViewById(R.id.ordertotalprice);
-        orderTime = (TextView) itemView.findViewById(R.id.servicetime);
-        status = (TextView) itemView.findViewById(R.id.orderstatus);
-        addToCal=(Button) itemView.findViewById(R.id.addtocalendar);
+        categoryName = (TextView) itemView.findViewById(R.id.categoryname);
+
         itemView.setOnClickListener(this);
     }
 

@@ -1,8 +1,11 @@
 package com.ishan387.testlogin;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,6 +30,8 @@ import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.Users;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class UserHub extends AppCompatActivity {
@@ -75,8 +80,26 @@ public class UserHub extends AppCompatActivity {
         List<Users> userDetails = new UserDatabase(this).getUser();
         if(userDetails!= null && !userDetails.isEmpty())
          u = userDetails.get(0);
+        if(null != u.getNm())
         username.setText(u.getNm());
-        userhuaddress.setText(u.getNu()+"\n"+u.getAddAt()+"\n"+u.getAddNear()+"\n"+u.getAddCity());
+        String city="",near="",addAt="",number="";
+        if(null != u.getAddCity() )
+        {
+            city =  u.getAddCity();
+        }
+        if(null != u.getAddNear())
+        {
+            near = u.getAddNear();
+        }
+        if(null != u.getAddAt())
+        {
+            addAt = u.getAddAt();
+        }
+        if(null !=u.getNu() )
+        {
+            number = u.getNu();
+        }
+        userhuaddress.setText(number+"\n"+addAt+"\n"+near+"\n"+city);
             loadRecylerView(filter);
         clayout = (CollapsingToolbarLayout) findViewById(R.id.clayout);
 
@@ -95,11 +118,13 @@ public class UserHub extends AppCompatActivity {
                 viewHolder.orderTime.setText(model.getServiceTime());
                 viewHolder.orderId.setText(model.getOrderId());
                 viewHolder.orderPrice.setText("₹ "+model.getTotal());
+
                 String statusSet="Placed";
 
                 if (model.getStatus() == 0)
                 {
                     statusSet="Placed";
+                    viewHolder.addToCal.setVisibility(View.GONE);
                 }
                 else if(model.getStatus() == 1)
                 {
@@ -108,8 +133,27 @@ public class UserHub extends AppCompatActivity {
                 else if (model.getStatus() == 2)
                 {
                     statusSet="Rejected";
+                    viewHolder.addToCal.setVisibility(View.GONE);
                 }
                 viewHolder.status.setText(statusSet);
+                viewHolder.addToCal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(model.getStatus()==0)
+                        {
+
+                        }
+                        else if(model.getStatus()==2)
+                        {
+
+                        }
+                        else
+                        {
+                            showAlertDialogueForCal(model);
+                        }
+                    }
+                });
 
                 viewHolder.setItemClickListener(new onClickInterface() {
                     @Override
@@ -137,5 +181,81 @@ public class UserHub extends AppCompatActivity {
         };
         recyclerView.setAdapter(adapter);
     }
+    private void showAlertDialogueForCal(final Orders model) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(UserHub.this);
+        alertDialog.setTitle("Appointment Reminder");
+        alertDialog.setMessage("Would you like to add this to your calendar?");
+
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent calIntent = new Intent(Intent.ACTION_INSERT);
+                calIntent.setType("vnd.android.cursor.item/event");
+                calIntent.putExtra(CalendarContract.Events.TITLE, "Sri's Beauty appointment - "+model.getOrderId()+":"+model.getUserName()+":"+model.getUserPhoneNumber());
+                calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, model.getAddress());
+                calIntent.putExtra(CalendarContract.Events.DESCRIPTION, model.getServiceTime()+"--Bill: "+model.getTotal());
+
+                Calendar calendar = Calendar.getInstance();
+                String arry [] = model.getServiceTime().split("-");
+                int month = getMonthInt(arry[0]);
+                String arry2[] = arry[1].split(" @ ");
+                int day = Integer.parseInt(arry2[0]);
+                String arry3[] = arry2[1].split(":");
+                int hour = Integer.parseInt(arry3[0]);
+                int min = Integer.parseInt(arry3[1]);
+                GregorianCalendar calDate = new GregorianCalendar(calendar.get(Calendar.YEAR), month, day,hour,min);
+
+                calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                        calDate.getTimeInMillis());
+                calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                        calDate.getTimeInMillis());
+
+                startActivity(calIntent);
+
+            }
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+    private int getMonthInt(String s) {
+        switch(s)
+        {
+            case "Jan":
+                return 0;
+            case "Feb":
+                return 1;
+            case "Mar":
+                return 2;
+            case "Apr":
+                return 3;
+            case "May":
+                return 4;
+            case "Jun":
+                return 5;
+            case "Jul":
+                return 6;
+            case "Aug":
+                return 7;
+            case "Sep":
+                return 8;
+            case "Oct":
+                return 9;
+            case "Nov":
+                return 10;
+            case "Dec":
+                return 11;
+        }
+
+        return 0;
+
+    }
+
 
 }

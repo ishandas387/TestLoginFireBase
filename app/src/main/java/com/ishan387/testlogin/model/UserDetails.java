@@ -9,6 +9,20 @@ import java.util.List;
 public class UserDetails {
 
     String key;
+    String userEmail;
+
+    public boolean isAdminstrator() {
+        return adminstrator;
+    }
+
+    public void setAdminstrator(boolean adminstrator) {
+        this.adminstrator = adminstrator;
+    }
+
+    boolean adminstrator;
+    String userName;
+    String uId;
+    public boolean admin;
 
     public void setKey(String key) {
         this.key = key;
@@ -21,19 +35,19 @@ public class UserDetails {
 
 
 
-    String userEmail;
-    boolean isAdmin;
+
 
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    public UserDetails(String key, String userEmail, boolean isAdmin, String userName, String uId) {
-        this.key = key;
+    public UserDetails( String userEmail, boolean adminstrator, String userName, String uId,String userToken) {
+
         this.userEmail = userEmail;
-        this.isAdmin = isAdmin;
+        this.adminstrator = adminstrator;
         this.userName = userName;
         this.uId = uId;
+        this.key = userToken;
     }
 
     public String getUserName() {
@@ -41,60 +55,29 @@ public class UserDetails {
         return userName;
     }
 
-    String userName;
 
-    public UserDetails(String key, String userEmail, boolean isAdmin, String userName, String uId, List<Orders> pastOrderList) {
-        this.key = key;
-        this.userEmail = userEmail;
-        this.isAdmin = isAdmin;
-        this.userName = userName;
-        this.uId = uId;
-        this.pastOrderList = pastOrderList;
-    }
 
-    String uId;
 
-    public UserDetails(String key, String userEmail, boolean isAdmin, String uId) {
-        this.key = key;
-        this.userEmail = userEmail;
-        this.isAdmin = isAdmin;
-        this.uId = uId;
-    }
 
-    List<Orders> pastOrderList;
+
 
     public UserDetails() {
     }
 
-    public UserDetails(String userEmail, boolean isAdmin, List<Orders> pastOrderList) {
-        this.userEmail = userEmail;
-        this.isAdmin = isAdmin;
-        this.pastOrderList = pastOrderList;
-    }
 
     public String getUserEmail() {
         return userEmail;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
 
-    public List<Orders> getPastOrderList() {
-        return pastOrderList;
-    }
+
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
 
-    public void setPastOrderList(List<Orders> pastOrderList) {
-        this.pastOrderList = pastOrderList;
-    }
+
 
     public void setuId(String uId) {
         this.uId = uId;

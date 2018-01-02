@@ -18,7 +18,12 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"  android:src="@drawable/bridalsomething" android:scaleType="centerCrop"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:background="@android:color/black" android:alpha="0.6">
 
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"  android:orientation="vertical" android:weightSum="10">

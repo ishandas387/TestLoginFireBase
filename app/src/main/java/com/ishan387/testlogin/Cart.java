@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
 import com.ishan387.testlogin.model.CartAdapter;
@@ -207,7 +208,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
             {
                 time = selectTime.getText().toString();
             }
-            o.setServiceTime(date+"|"+time);
+            o.setServiceTime(date+" @ "+time);
             o.setUserPhoneNumber(userPhoneNumber);
             Float tot =0.0f;
             for(OrderItem pt : productList)
@@ -217,6 +218,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
             o.setTotal(tot.toString());
 
             o.setAddress(addr);
+            o.setUserToken(FirebaseInstanceId.getInstance().getToken());
             orderrequest.child(o.getOrderId()).setValue(o);
             new CartDatabase(getBaseContext()).cleanCart();
             Toast.makeText(Cart.this,"Order placed",Toast.LENGTH_LONG).show();
