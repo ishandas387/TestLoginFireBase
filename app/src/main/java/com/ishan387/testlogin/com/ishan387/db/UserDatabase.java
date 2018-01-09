@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
-import com.ishan387.testlogin.model.CartItems;
 import com.ishan387.testlogin.model.Users;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 

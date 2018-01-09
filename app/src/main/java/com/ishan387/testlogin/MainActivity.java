@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // add few more layouts if you want
         layouts = new int[]{
                 R.layout.side1,
-                R.layout.side2,
+
                 R.layout.side3,
                 R.layout.side4};
 

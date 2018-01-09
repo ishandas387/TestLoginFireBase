@@ -4,16 +4,13 @@ package com.ishan387.testlogin;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,37 +28,38 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ishan387.testlogin.com.ishan387.common.Util;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
-
 import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
 import com.ishan387.testlogin.model.CartItems;
+import com.ishan387.testlogin.model.OrderItem;
+import com.ishan387.testlogin.model.Orders;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.Review;
 import com.ishan387.testlogin.model.ReviewAdapter;
 import com.ishan387.testlogin.model.UserDetails;
 import com.ishan387.testlogin.model.Users;
 import com.squareup.picasso.Picasso;
-
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemDetail extends AppCompatActivity implements RatingDialogListener {
 
 
-    TextView name,price;
+    TextView name,price,reviewTotal,itemdescription;
     ImageView bgi;
     CollapsingToolbarLayout clayout;
     FloatingActionButton fab;
-    String productId;
+    String productId,productName;
     FirebaseDatabase products;
-    DatabaseReference prod;
+    DatabaseReference prod,pastorders;
     Product p;
     RatingBar ratingbar;
     FloatingActionButton ratingButton;
@@ -81,6 +79,8 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
 
         products = FirebaseDatabase.getInstance();
         prod = products.getReference("Products");
+        pastorders = products.getReference("Orders");
+
         fab = (FloatingActionButton) findViewById(R.id.cart);
         name = (TextView) findViewById(R.id.name);
         price =(TextView) findViewById(R.id.itemdetail_price);
@@ -89,11 +89,19 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         ratingbar = (RatingBar) findViewById(R.id.ratngbar);
         adminDelete =(Button) findViewById(R.id.adminremoveitem);
         adminEdit =(Button) findViewById(R.id.adminedititem);
+        reviewTotal = (TextView) findViewById(R.id.reviewtotal);
+        itemdescription = (TextView) findViewById(R.id.itemdescription);
         user = mAuth.getCurrentUser();
-
+        if(!Util.isConnectedToInternet(this))
+        {
+            Toast.makeText(ItemDetail.this, "Offline ! Please check connectivity.",
+                    Toast.LENGTH_SHORT  ).show();
+            finish();
+        }
         ratingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 showRatingDialogue();
             }
         });
@@ -114,10 +122,15 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
 
         if (getIntent() != null) {
             productId = getIntent().getStringExtra("productId");
+            productName = getIntent().getStringExtra("pName");
 
         }
         if (!productId.isEmpty()) {
             getProductDetails();
+            if(!userHasOrdered(productName,user.getEmail()))
+            {
+                ratingButton.setEnabled(false);
+            }
 
         }
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
@@ -164,6 +177,49 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         });
     }
 
+    private boolean userHasOrdered( String productName,String email) {
+        final List<Orders> userOrders = new ArrayList<>();
+        pastorders = FirebaseDatabase.getInstance().getReference("Orders");
+        pastorders.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> td = (HashMap<String,Object>) dataSnapshot.getValue();
+
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        Orders userOrder = postSnapshot.getValue(Orders.class);
+                        userOrders.add(userOrder);
+                    }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if(!userOrders.isEmpty())
+        {
+            List<OrderItem> products = new ArrayList<>();
+            for(Orders o : userOrders)
+            {
+                products.addAll(o.getProducts());
+            }
+            if(!products.isEmpty())
+            {
+                for(OrderItem oi :products)
+                {
+                    if(oi.getName().equalsIgnoreCase(productName))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+
+    }
+
+
     private void editItem(Product p) {
 
         Intent i = new Intent();
@@ -201,9 +257,6 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
                 .setHint("Please write your comment here")
                 .setWindowAnimation(R.style.RatingDialogueFadeAnimation)
                 .create(ItemDetail.this).show();
-
-
-
     }
 
 
@@ -219,6 +272,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
                      name.setText(p.getName());
                      price.setText("₹"+p.getPrice());
                      clayout.setTitle(p.getCategory());
+                     itemdescription.setText(p.getDescription());
                      List<Review> currentReviewList = p.getReviewList();
                      if(null != currentReviewList && !currentReviewList.isEmpty())
                      {
@@ -230,6 +284,19 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
                          }
                          float average = sum/count;
                          ratingbar.setRating(average);
+                         if(count ==1)
+                         {
+
+                         reviewTotal.setText(count+" Review");
+                         }
+                         else if (count>1)
+                         {
+                             reviewTotal.setText(count+" Reviews");
+                         }
+                         else
+                         {
+                             reviewTotal.setText("0 Reviews");
+                         }
                          settingListOfReviews(currentReviewList);
                      }
                  }

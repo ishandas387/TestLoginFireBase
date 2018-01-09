@@ -1,16 +1,12 @@
 package com.ishan387.testlogin;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +16,6 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -34,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
+import com.ishan387.testlogin.com.ishan387.common.Util;
 import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.ProductViewHolder;
 import com.mancj.materialsearchbar.MaterialSearchBar;
@@ -69,7 +63,12 @@ public class ProductActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FirebaseRecyclerAdapter<Product, ProductViewHolder> searchAdapter;
-
+        if(!Util.isConnectedToInternet(this))
+        {
+            Toast.makeText(ProductActivity.this, "Offline ! Please check connectivity.",
+                    Toast.LENGTH_SHORT  ).show();
+            finish();
+        }
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -198,6 +197,7 @@ public class ProductActivity extends AppCompatActivity {
 
                         Intent i = new Intent(ProductActivity.this,ItemDetail.class);
                         i.putExtra("productId",searchAdapter.getRef(position).getKey());
+                        i.putExtra("pName", m.getName());
                         startActivity(i);
                     }
                 });
@@ -238,6 +238,7 @@ public class ProductActivity extends AppCompatActivity {
 
                         Intent i = new Intent(ProductActivity.this,ItemDetail.class);
                         i.putExtra("productId",adapter.getRef(position).getKey());
+                        i.putExtra("pName", m.getName());
                         startActivity(i);
                     }
                 });

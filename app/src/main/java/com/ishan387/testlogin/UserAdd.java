@@ -1,9 +1,9 @@
 package com.ishan387.testlogin;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -11,14 +11,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
-import com.ishan387.testlogin.model.CartItems;
-import com.ishan387.testlogin.model.UserDetails;
 import com.ishan387.testlogin.model.Users;
 
 public class UserAdd extends AppCompatActivity {

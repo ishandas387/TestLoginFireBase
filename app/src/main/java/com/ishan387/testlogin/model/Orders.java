@@ -1,6 +1,5 @@
 package com.ishan387.testlogin.model;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +20,10 @@ public class Orders {
 
     String address;
     String userToken;
+
+
+
+    String email;
     public Orders(String timeStamp, String orderId, String productId, String userName, String uid, List<OrderItem> products, String serviceTime, String total, int status, String address, String userToken, String userPhoneNumber) {
         this.timeStamp = timeStamp;
         this.orderId = orderId;
@@ -35,7 +38,13 @@ public class Orders {
         this.userToken = userToken;
         this.userPhoneNumber = userPhoneNumber;
     }
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public String getUserToken() {
         return userToken;
     }

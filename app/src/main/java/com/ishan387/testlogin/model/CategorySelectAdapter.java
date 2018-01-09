@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ishan387.testlogin.Home;
 import com.ishan387.testlogin.ProductActivity;
 import com.ishan387.testlogin.R;
 import com.ishan387.testlogin.onClickInterface;

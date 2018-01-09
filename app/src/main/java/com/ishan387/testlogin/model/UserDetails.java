@@ -1,7 +1,5 @@
 package com.ishan387.testlogin.model;
 
-import java.util.List;
-
 /**
  * Created by ishan on 04-11-2017.
  */
@@ -19,7 +17,7 @@ public class UserDetails {
         this.adminstrator = adminstrator;
     }
 
-    boolean adminstrator;
+    boolean adminstrator = false;
     String userName;
     String uId;
     public boolean admin;

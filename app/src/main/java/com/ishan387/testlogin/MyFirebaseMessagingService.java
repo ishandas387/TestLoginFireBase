@@ -2,6 +2,7 @@ package com.ishan387.testlogin;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
@@ -40,8 +41,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     private void sendNotification(String notificationTitle, String notificationBody) {
-        Intent intent = new Intent(this, OfferManagerment.class);
+        Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if(notificationTitle.contains("offer"))
+        {
+
+            intent.setComponent(new ComponentName("com.ishan387.testlogin.OfferManagerment","OfferManagerment.class"));
+
+        }
+        else
+        {
+            intent.setComponent(new ComponentName("com.ishan387.testlogin.UserHub","UserHub.class"));
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 

@@ -2,9 +2,9 @@ package com.ishan387.testlogin;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.ishan387.testlogin.com.ishan387.common.Util;
 import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 import com.ishan387.testlogin.com.ishan387.db.UserDatabase;
 import com.ishan387.testlogin.model.CartAdapter;
@@ -51,7 +52,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
     List<OrderItem> productList = new ArrayList<>();
     private FirebaseAuth mAuth;
     String addr="";
-
+    Users u = new Users();
 
     public TextView getTotal() {
         return total;
@@ -118,9 +119,15 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
                 );
                 datePickerDialog.setTitle("SELECT SERVICE DATE");
                 datePickerDialog.show(getFragmentManager(),"Date");
+                if(now.get(Calendar.HOUR_OF_DAY) >= 18)
+                {
+                    now.add(Calendar.DAY_OF_MONTH,1);
+                }
                 datePickerDialog.setMinDate(now);
+
                 Calendar now7 =Calendar.getInstance();
-                now7.add(Calendar.DAY_OF_MONTH,7);
+
+                now7.add(Calendar.DAY_OF_MONTH,90);
                 datePickerDialog.setMaxDate(now7);
 
             }
@@ -129,19 +136,41 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         selectTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(Cart.this,
+                if(selectDate.getText().toString().equals("DATE"))
+                {
+                    Toast.makeText(Cart.this,"Please select a service date",Toast.LENGTH_LONG).show();
+                }
+                else
+                {
 
-                        now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND),true
-                );
-                timePickerDialog.setTitle("SELECT SERVICE TIME");
-                timePickerDialog.show(getFragmentManager(),"TIME");
-                timePickerDialog.setMinTime(8,0,0);
-                timePickerDialog.setMaxTime(18,0,0);
-               // timePickerDialog.setTimeInterval(7);
+                    Calendar now = Calendar.getInstance();
+                    TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(Cart.this,
+
+                            now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND),true
+                    );
+                    timePickerDialog.setTitle("SELECT SERVICE TIME");
+                    timePickerDialog.show(getFragmentManager(),"TIME");
+                    String selectedDate = selectDate.getText().toString();
+                    String dateSplit[] =null;
+                    if(selectedDate != null && !selectedDate.isEmpty())
+                    {
+                        dateSplit = selectedDate.split("-");
+                    }
+                    if(now.get(Calendar.HOUR_OF_DAY) <= 18 && Integer.parseInt(dateSplit[1]) == now.get(Calendar.DAY_OF_MONTH))
+                    {
+                        timePickerDialog.setMinTime(now.get(Calendar.HOUR_OF_DAY),now.get(Calendar.MINUTE),0);
+                    }
+                    else {
+                        timePickerDialog.setMinTime(8,0,0);
+                    }
+
+                    timePickerDialog.setMaxTime(18,0,0);
+                    // timePickerDialog.setTimeInterval(7);
               /*  timePickerDialog.setMinTime( now.get(Calendar.HOUR_OF_DAY)+1, now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
                 timePickerDialog.setMaxTime( now.get(Calendar.HOUR_OF_DAY)+7, now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
-       */     }
+       */       }
+            }
+
         });
     }
 
@@ -194,7 +223,16 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
             o.setOrderId(String.valueOf(System.currentTimeMillis()));
             if(currentUser!=null)
             {
-                o.setUserName(currentUser.getDisplayName());
+                o.setEmail(currentUser.getEmail());
+                if(currentUser.getDisplayName() != null || !currentUser.getDisplayName().isEmpty())
+                {
+                    o.setUserName(currentUser.getDisplayName());
+                }
+                else
+                {
+                    o.setUserName(u.getNm());
+                }
+
             }
             o.setProducts(productList);
             String date = "";
@@ -239,7 +277,7 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
         editText.setLayoutParams(lp);
         alertDialog.setView(editText);
 
-        Users u = new Users();
+
         List<Users> userDetails = new UserDatabase(this).getUser();
 
         if(userDetails!= null && !userDetails.isEmpty())
@@ -265,7 +303,16 @@ public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSe
             public void onClick(DialogInterface dialog, int which) {
                if(null != editText.getText() && !editText.getText().toString().isEmpty())
                {
-                  placeorderMethod(editText.getText().toString());
+                   if(!Util.isConnectedToInternet(Cart.this))
+                   {
+                       Toast.makeText(Cart.this, "Offline ! Please check connectivity.",
+                               Toast.LENGTH_SHORT  ).show();
+
+                   }
+                   else {
+
+                        placeorderMethod(editText.getText().toString());
+                   }
                }
                else
                {

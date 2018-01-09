@@ -2,12 +2,10 @@ package com.ishan387.testlogin.model;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ishan387.testlogin.R;
 import com.ishan387.testlogin.onClickInterface;

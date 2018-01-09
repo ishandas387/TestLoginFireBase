@@ -47,6 +47,7 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.github.wdullaer:MaterialDateTimePicker:v3.0.0'
     compile 'com.stepstone.apprating:app-rating:2.0.0'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
     testCompile 'junit:junit:4.12'
 
 }

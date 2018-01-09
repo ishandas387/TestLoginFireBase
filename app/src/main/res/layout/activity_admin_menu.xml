@@ -20,10 +20,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:orientation="horizontal" android:id="@+id/adminvieworders" android:weightSum="10">
                     <ImageView
-                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_vertical"
 
                         android:layout_width="0dp" android:scaleType="center" android:layout_marginLeft="5dp"
-                        android:layout_height="wrap_content" android:padding="2dp" android:layout_gravity="left" android:layout_weight="3" android:src="@drawable/ic_vieworders"/>
+                        android:layout_height="wrap_content" android:padding="2dp"  android:layout_weight="3" android:src="@drawable/ic_vieworders"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:layout_gravity="center" android:layout_weight="4" android:orientation="vertical">
@@ -37,7 +37,7 @@
                     </LinearLayout>
                              <ImageView
                         android:layout_width="0dp" android:scaleType="center"
-                        android:layout_height="wrap_content" android:layout_gravity="right" android:layout_weight="3"  android:src="@drawable/arrow"/>
+                        android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:layout_weight="3"  android:src="@drawable/arrow"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -52,10 +52,11 @@
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="center_vertical"
+
                         android:layout_weight="3"
                         android:padding="2dp"
-                        android:layout_marginTop="10dp"
+
                         android:scaleType="center"
                         android:src="@drawable/ic_additem" />
                     <LinearLayout
@@ -73,7 +74,7 @@
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="3"
                         android:src="@drawable/arrow" />
                 </LinearLayout>
@@ -89,10 +90,11 @@
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="center_vertical"
+
                         android:layout_weight="3"
                         android:padding="2dp"
-                        android:layout_marginTop="10dp"
+
                         android:scaleType="center"
                         android:src="@drawable/offer" />
                     <LinearLayout
@@ -110,86 +112,54 @@
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="3"
                         android:src="@drawable/arrow" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="2dp" android:id="@+id/usermanagement" android:elevation="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="horizontal" android:id="@+id/um" android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+
+                        android:layout_weight="3"
+                        android:padding="2dp"
+
+                        android:scaleType="center"
+                        android:src="@drawable/user" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:layout_gravity="center" android:layout_weight="4" android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="Users" android:textSize="20sp" android:textColor="@android:color/black" />
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content" android:text="Manage your users" android:textSize="11sp" android:textColor="@color/lightgreytype" android:layout_weight="3"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="3"
+                        android:src="@drawable/arrow" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
 
-  <!-- <TableLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent" >
-
-
-       <TableRow
-           android:layout_height="wrap_content"
-           android:layout_width="fill_parent"
-           android:gravity="center_horizontal" android:weightSum="10">
-
-           <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textColor="@android:color/white" android:layout_weight="2" android:text="View Orders" android:textSize="15sp" />
-
-           <Button android:id="@+id/vieworders" android:layout_weight="6" android:layout_width="match_parent" android:layout_height="200dp"
-               android:background="@drawable/viewordericon"/>
-       </TableRow>
-
-       &lt;!&ndash; Row 2 with 3 columns &ndash;&gt;
-
-
-       <TableRow
-           android:id="@+id/tableRow1"
-           android:layout_height="wrap_content"
-           android:layout_width="match_parent" android:gravity="center_horizontal" android:weightSum="10">
-
-           <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textColor="@android:color/white" android:layout_weight="2" android:text="Add Service" android:textSize="15sp" />
-
-           <Button android:id="@+id/additem" android:layout_weight="6" android:layout_width="match_parent" android:layout_height="200dp"
-               android:background="@drawable/additem"/>
-
-
-       </TableRow>
-       <TableRow
-           android:id="@+id/tableRow2"
-           android:layout_height="wrap_content"
-           android:layout_width="match_parent" android:gravity="center_horizontal" android:weightSum="10">
-
-           <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textColor="@android:color/white" android:layout_weight="2" android:text="Offers" android:textSize="15sp" />
-
-           <Button android:id="@+id/offer" android:layout_weight="6" android:layout_width="match_parent" android:layout_height="200dp"
-               android:background="@drawable/offericon"/>
-
-
-       </TableRow>
-   </TableLayout>-->
-<!--
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <Button
-                android:id="@+id/dummy_button"
-                style="?metaButtonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/dummy_button" />
-
-        </LinearLayout>
-    </FrameLayout>-->
     </ScrollView>
 
 </RelativeLayout>

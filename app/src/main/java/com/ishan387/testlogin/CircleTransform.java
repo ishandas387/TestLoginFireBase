@@ -5,14 +5,14 @@ package com.ishan387.testlogin;
  */
 
 
-        import android.content.Context;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapShader;
-        import android.graphics.Canvas;
-        import android.graphics.Paint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 
-        import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-        import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 /**
  * Created by Lincoln on 10/03/16.

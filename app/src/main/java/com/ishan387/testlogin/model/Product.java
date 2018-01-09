@@ -1,7 +1,5 @@
 package com.ishan387.testlogin.model;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

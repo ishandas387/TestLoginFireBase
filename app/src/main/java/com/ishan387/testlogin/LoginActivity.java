@@ -1,9 +1,9 @@
 package com.ishan387.testlogin;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.ishan387.testlogin.com.ishan387.common.Util;
 import com.ishan387.testlogin.model.UserDetails;
 
 public class LoginActivity extends AppCompatActivity implements
@@ -393,12 +394,38 @@ public class LoginActivity extends AppCompatActivity implements
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.email_create_account_button) {
+            if(Util.isConnectedToInternet(this))
+            {
+
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            }
+            else
+            {
+                Toast.makeText(LoginActivity.this, "Offline ! Please check connectivity.",
+                        Toast.LENGTH_SHORT  ).show();
+
+            }
         } else if (i == R.id.email_sign_in_button) {
-            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            if (Util.isConnectedToInternet(this)) {
+                signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+
+            }
+            else
+            {
+                Toast.makeText(LoginActivity.this, "Offline ! Please check connectivity.",
+                        Toast.LENGTH_SHORT  ).show();
+            }
         }
         else if (i == R.id.sign_in_button) {
-            signInWithGoogle();/*else if (i == R.id.sign_out_button) {
+            if (Util.isConnectedToInternet(this)) {
+
+                signInWithGoogle();
+            }
+            else {
+                Toast.makeText(LoginActivity.this, "Offline ! Please check connectivity.",
+                        Toast.LENGTH_SHORT  ).show();
+            }
+            /*else if (i == R.id.sign_out_button) {
             signOut();
         } else if (i == R.id.verify_email_button) {
             sendEmailVerification();

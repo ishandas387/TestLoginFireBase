@@ -2,19 +2,23 @@ package com.ishan387.testlogin;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,7 +30,6 @@ import com.ishan387.testlogin.model.MyDailogueFragment;
 import com.ishan387.testlogin.model.OrderHistoryViewHolder;
 import com.ishan387.testlogin.model.OrderItem;
 import com.ishan387.testlogin.model.Orders;
-import com.ishan387.testlogin.model.Product;
 import com.ishan387.testlogin.model.Users;
 
 import java.util.ArrayList;
@@ -45,18 +48,23 @@ public class UserHub extends AppCompatActivity {
     CollapsingToolbarLayout clayout;
     FirebaseRecyclerAdapter<Orders, OrderHistoryViewHolder> adapter;
     MyDailogueFragment fragment = new MyDailogueFragment();
+    de.hdodenhof.circleimageview.CircleImageView profile;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.userhub);
+
         mAuth = FirebaseAuth.getInstance();
         username = (TextView) findViewById(R.id.username);
+        useremail = (TextView) findViewById(R.id.useremail);
         userhuaddress = (TextView) findViewById(R.id.userhuaddress);
         recyclerView = (RecyclerView) findViewById(R.id.order_history_recycler_view);
+        de.hdodenhof.circleimageview.CircleImageView profile = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.profile_image);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL, true);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
@@ -64,10 +72,32 @@ public class UserHub extends AppCompatActivity {
         Query filter = null;
         if (mAuth != null) {
             user = mAuth.getCurrentUser();
-            username.setText(user.getDisplayName());
+            if(user.getDisplayName() != null && !user.getDisplayName().isEmpty())
+            {
+                username.setText(user.getDisplayName());
+            }
+            else
+            {
+                username.setText(user.getEmail().split("@")[0]);
+            }
+
+
+            useremail.setText(user.getEmail());
+            if(user.getPhotoUrl() != null)
+            {
+                String url = user.getPhotoUrl().toString();
+                if(null != url && !url.isEmpty())
+                {
+
+                    Glide.with(this).load(url)
+                            .crossFade()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(profile);
+                }
+            }
         }
         orders = FirebaseDatabase.getInstance().getReference("Orders");
-        filter = orders.orderByChild("userName").equalTo(user.getDisplayName());
+        filter = orders.orderByChild("email").equalTo(user.getEmail());
         edit = (FloatingActionButton) findViewById(R.id.editupdate);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,14 +129,14 @@ public class UserHub extends AppCompatActivity {
         {
             number = u.getNu();
         }
-        userhuaddress.setText(number+"\n"+addAt+"\n"+near+"\n"+city);
+        userhuaddress.setText(number+"\n"+addAt+", "+near+"\n"+city);
             loadRecylerView(filter);
         clayout = (CollapsingToolbarLayout) findViewById(R.id.clayout);
 
         clayout.setExpandedTitleTextAppearance(R.style.expandclayout);
         clayout.setCollapsedTitleTextAppearance(R.style.collapsedclayout);
 
-        clayout.setTitle("ORDER HISTORY");
+
 
     }
 
@@ -146,6 +176,7 @@ public class UserHub extends AppCompatActivity {
                         }
                         else if(model.getStatus()==2)
                         {
+                            viewHolder.colorLayoutLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.primary, null)); //without theme
 
                         }
                         else

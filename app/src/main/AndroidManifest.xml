@@ -63,7 +63,7 @@
         <activity
             android:name=".AdminMenu"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_admin_menu"
+            android:label="Admin"
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".CustomerCare"
@@ -91,7 +91,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ProductActivity"
-            android:label="@string/title_activity_product"
+            android:label="Services"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

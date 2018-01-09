@@ -26,8 +26,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ishan387.testlogin.com.ishan387.common.Util;
 import com.ishan387.testlogin.model.Product;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -71,6 +71,12 @@ public class AdminActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        if(!Util.isConnectedToInternet(this))
+        {
+            Toast.makeText(AdminActivity.this, "Offline ! Please check connectivity.",
+                    Toast.LENGTH_SHORT  ).show();
+
+        }
 
         itemName = (EditText) findViewById(R.id.field_service);
         itemDescription = (EditText) findViewById(R.id.editText);

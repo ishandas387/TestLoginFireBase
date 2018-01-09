@@ -1,12 +1,13 @@
 package com.ishan387.testlogin.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by ishan on 01-11-2017.
  */
 
-public class Review {
+public class Review implements Serializable {
 
     String userName;
     float rating;

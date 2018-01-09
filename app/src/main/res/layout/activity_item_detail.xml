@@ -101,8 +101,15 @@
                     android:layout_height="wrap_content"
                     android:rating="0"
                     android:max="5"
-                    android:layout_marginTop="19dp"
+                    android:clickable="false"
+                    android:hapticFeedbackEnabled="true"
+                    style="?android:attr/ratingBarStyleIndicator"
+                    android:layout_marginTop="20dp"
                     android:id="@+id/ratngbar" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/reviewtotal" android:padding="3dp" android:layout_marginRight="7dp"
+                    android:layout_gravity="right" android:textSize="12sp"  android:text="0 Reviews"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,12 +143,6 @@
 
                 </LinearLayout>
 
-
-
-
-
-
-
             </LinearLayout>
 
 
@@ -156,13 +157,13 @@
                 <TextView
                     android:textColor="@android:color/black"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:text="Item description"/>
+                    android:layout_height="wrap_content" android:id="@+id/itemdescription" android:textSize="16sp" android:text="Item description"/>
             </LinearLayout>
 
             <TextView
-                android:textColor="@android:color/black"
+                android:textColor="#8c8c8c"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Recent reviews"/>
+                android:layout_height="wrap_content" android:textSize="15sp"  android:text="Recent reviews"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
