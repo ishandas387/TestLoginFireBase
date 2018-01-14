@@ -37,6 +37,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+/**
+ * User hub, Address mdification, order history
+ */
 public class UserHub extends AppCompatActivity {
 
     TextView username,useremail,userhuaddress;

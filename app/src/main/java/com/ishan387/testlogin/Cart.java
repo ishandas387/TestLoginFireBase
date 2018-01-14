@@ -37,6 +37,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * User cart and cart management. Powered by sqlite. And order placement with date/time validations/
+ */
 public class Cart extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private RecyclerView recyclerView;

@@ -33,6 +33,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+/**
+ * Admin to accept/reject orders here.
+ */
 public class AdminAcceptReject extends AppCompatActivity {
 
     TextView username,useremail;
@@ -64,33 +67,6 @@ public class AdminAcceptReject extends AppCompatActivity {
 
         orders = FirebaseDatabase.getInstance().getReference("Orders");
         Query q = orders.orderByKey();
-        /*final List<Orders> list1 = new ArrayList<>();
-        orders.orderByChild("orderId").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //List<Orders> list2 = (List<Orders>) dataSnapshot.getValue();
-                //list1.addAll(list2);
-
-                Object value = dataSnapshot.getValue();
-                if(value instanceof List) {
-                    List<Object> values = (List<Object>) value;
-                    // do your magic with values
-                }
-                else {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        Collections.reverse(list1);
-
-        OrderAcceptRejectAdapter ad = new OrderAcceptRejectAdapter(list1,this);
-        recyclerView.setAdapter(ad);
-*/
         loadRecycler(q);
 
 

@@ -50,6 +50,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Item detail page, User to add to cart, view reviews and add reviews. Admin to edit and delete items.
+ */
 public class ItemDetail extends AppCompatActivity implements RatingDialogListener {
 
 
@@ -127,10 +130,10 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
         }
         if (!productId.isEmpty()) {
             getProductDetails();
-            if(!userHasOrdered(productName,user.getEmail()))
+           /* if(!userHasOrdered(productName,user.getEmail()))
             {
                 ratingButton.setEnabled(false);
-            }
+            }*/
 
         }
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);

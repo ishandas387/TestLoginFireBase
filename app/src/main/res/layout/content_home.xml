@@ -28,13 +28,19 @@
                 </LinearLayout>
 
         </FrameLayout>
+        <com.daimajia.slider.library.SliderLayout
+            android:layout_marginTop="5dp" android:layout_marginBottom="5dp"
+            android:id="@+id/imageoffersllider" android:layout_below="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-             android:id="@+id/categoryselect" android:layout_below="@+id/frame">
+             android:id="@+id/categoryselect" android:layout_below="@+id/imageoffersllider">
 
         </android.support.v7.widget.RecyclerView>
 

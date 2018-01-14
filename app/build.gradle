@@ -48,6 +48,8 @@ dependencies {
     compile 'com.github.wdullaer:MaterialDateTimePicker:v3.0.0'
     compile 'com.stepstone.apprating:app-rating:2.0.0'
     compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
     testCompile 'junit:junit:4.12'
 
 }

@@ -34,6 +34,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.ishan387.testlogin.com.ishan387.common.Util;
 import com.ishan387.testlogin.model.UserDetails;
 
+/**
+ * Login activity, email and gmail account support. Create account
+ */
 public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener,  GoogleApiClient.OnConnectionFailedListener  {
 

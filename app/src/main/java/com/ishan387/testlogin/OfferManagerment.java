@@ -2,6 +2,7 @@ package com.ishan387.testlogin;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +26,7 @@ import com.ishan387.testlogin.com.ishan387.db.CartDatabase;
 import com.ishan387.testlogin.model.CartItems;
 import com.ishan387.testlogin.model.OfferZoneViewHolder;
 import com.ishan387.testlogin.model.Offers;
+import com.squareup.picasso.Picasso;
 
 public class OfferManagerment extends AppCompatActivity {
 
@@ -76,6 +80,14 @@ public class OfferManagerment extends AppCompatActivity {
                 viewHolder.offerznid.setText(model.getOfferId());
                 viewHolder.offerznname.setText(model.getOfferName());
                 viewHolder.offerznprice.setText("₹"+model.getOfferPrice());
+                if(model.getUrl()!= null && !model.getUrl().isEmpty())
+                {
+                    Uri uri = Uri.parse(model.getUrl());
+                    if(null!= uri) {
+                        Glide.with(getBaseContext()).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.offrimg);
+                        // draweeView.setImageURI(Uri.parse(model.getImageUrl()));
+                    }
+                }
                 if(!isAdmin)
                 {
                     viewHolder.delete.setVisibility(View.GONE);

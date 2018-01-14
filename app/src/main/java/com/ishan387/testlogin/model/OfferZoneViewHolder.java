@@ -3,6 +3,7 @@ package com.ishan387.testlogin.model;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ishan387.testlogin.R;
@@ -16,6 +17,7 @@ public class OfferZoneViewHolder extends RecyclerView.ViewHolder implements View
 
     public TextView offerznname, offerzndesc, offerznprice,offerznid;
     public  Button delete, addtocart;
+    public ImageView offrimg;
 
 
     public void setItemClickListener(onClickInterface itemClickListener) {
@@ -31,6 +33,7 @@ public class OfferZoneViewHolder extends RecyclerView.ViewHolder implements View
         offerznid = (TextView) itemView.findViewById(R.id.offerznid);
         delete = (Button) itemView.findViewById(R.id.offerzndelete);
         addtocart = (Button) itemView.findViewById(R.id.offerznaddtocart);
+        offrimg =(ImageView) itemView.findViewById(R.id.offrimg);
     }
 
     @Override

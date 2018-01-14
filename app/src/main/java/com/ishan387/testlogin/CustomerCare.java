@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+/**
+ * Connect to Sri via phone and email
+ */
 public class CustomerCare extends AppCompatActivity {
 
     ImageView call, mail;
