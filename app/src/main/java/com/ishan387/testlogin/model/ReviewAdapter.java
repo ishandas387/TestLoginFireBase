@@ -21,10 +21,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
 
     private List<Review> lisData = new ArrayList<>();
     private Context context;
+    private boolean isAdmin;
 
-    public ReviewAdapter(List<Review> lisData, Context context) {
+    public ReviewAdapter(List<Review> lisData, Context context,boolean isAdmin) {
         this.lisData = lisData;
         this.context = context;
+        this.isAdmin =isAdmin;
     }
 
 
@@ -44,7 +46,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
             date = lisData.get(position).getDate();
             SimpleDateFormat simpleDateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a ");
             holder.reviewDate.setText(simpleDateformat.format(date));
-            holder.reviewerEmail.setText(lisData.get(position).getUserEmail());
+            if(isAdmin)
+            {
+
+                holder.reviewerEmail.setText(lisData.get(position).getUserEmail());
+            }
+            else
+            {
+                holder.reviewerEmail.setVisibility(View.GONE);
+            }
             holder.reviewDescription.setText(lisData.get(position).getReview());
             holder.reviewerName.setText(lisData.get(position).getUserName());
     }

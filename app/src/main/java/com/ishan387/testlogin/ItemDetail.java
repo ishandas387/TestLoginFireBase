@@ -73,7 +73,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
     Button adminEdit,adminDelete;
     UserDetails userDetail;
     DataSnapshot users;
-
+    boolean isAdmin = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +137,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
 
         }
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        boolean isAdmin = pref.getBoolean("isAdmin",false);
+       isAdmin= pref.getBoolean("isAdmin",false);
         if(!isAdmin)
         {
             LinearLayout adminLayout = (LinearLayout)findViewById(R.id.adminsection_itemdetail);
@@ -316,7 +316,7 @@ public class ItemDetail extends AppCompatActivity implements RatingDialogListene
 
     private void settingListOfReviews(List<Review> currentReviewList) {
 
-        ReviewAdapter adapter = new ReviewAdapter(currentReviewList, this);
+        ReviewAdapter adapter = new ReviewAdapter(currentReviewList, this,isAdmin);
         recyclerView.setAdapter(adapter);
 
     }
