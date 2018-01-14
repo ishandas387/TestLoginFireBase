@@ -67,6 +67,10 @@ public class OfferManagerment extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("offers");
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
          isAdmin = pref.getBoolean("isAdmin",false);
+        if(!isAdmin)
+        {
+            fab.setVisibility(View.GONE);
+        }
         loadRecylerView();
 
     }
